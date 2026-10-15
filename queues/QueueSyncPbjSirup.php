@@ -17,6 +17,7 @@ class QueueSyncPbjSirup extends BaseObject implements JobInterface
 
     private const PAGE_SIZE = 100;
     private const URL = 'https://sirup.inaproc.id/sirup/caripaketctr/search';
+    private const DETAIL_URL = 'https://sirup.inaproc.id/sirup/rup/detailPaketPenyedia2020?idPaket=';
 
     public function execute($queue)
     {
@@ -197,6 +198,9 @@ class QueueSyncPbjSirup extends BaseObject implements JobInterface
                 $model->$field = $value;
             }
         }
+        if ($model->source_of_funds === null) {
+            $model->source_of_funds = $this->fetchSourceOfFunds($rupId);
+        }
         if (!$preserveExisting) {
             $model->pbj_type = $this->pbj_type;
             $model->fiscal_year = $year;
@@ -206,5 +210,61 @@ class QueueSyncPbjSirup extends BaseObject implements JobInterface
             throw new \RuntimeException('Gagal menyimpan paket SIRUP ' . $rupId . ': ' . json_encode($model->errors));
         }
         return true;
+    }
+
+    private function fetchSourceOfFunds($rupId)
+    {
+        $curl = curl_init(self::DETAIL_URL . $rupId);
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 8,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_USERAGENT => 'Mozilla/5.0',
+        ]);
+        $html = curl_exec($curl);
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        if ($html === false || $status !== 200) {
+            Yii::warning('Detail SIRUP ' . $rupId . ' tidak dapat dibaca (HTTP ' . $status . ').', __METHOD__);
+            return null;
+        }
+
+        $document = new \DOMDocument();
+        $previous = libxml_use_internal_errors(true);
+        try {
+            if (!$document->loadHTML($html)) {
+                return null;
+            }
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
+        $xpath = new \DOMXPath($document);
+        $cells = $xpath->query('//td[contains(concat(" ", normalize-space(@class), " "), " label-left ")][normalize-space(.)="Sumber Dana"]/following-sibling::td[1]//tr[td]/td[2]');
+        if ($cells === false || $cells->length === 0) {
+            return null;
+        }
+
+        $names = [];
+        foreach ($cells as $cell) {
+            $name = strtoupper(trim($cell->textContent));
+            if ($name !== '') {
+                $names[$name] = true;
+            }
+        }
+        // PBJ hanya memiliki satu FK sumber dana. Jangan pilih salah satu jika paket memakai beberapa sumber.
+        if (count($names) !== 1) {
+            return null;
+        }
+        $name = array_key_first($names);
+        if ($name === 'APBDP') {
+            $name = 'APBD PERUBAHAN';
+        }
+        $sourceId = Yii::$app->db->createCommand(
+            'SELECT id FROM source_of_funds WHERE UPPER(name) = :name LIMIT 1',
+            [':name' => $name]
+        )->queryScalar();
+        return $sourceId === false ? null : (int) $sourceId;
     }
 }
