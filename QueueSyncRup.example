@@ -1,0 +1,84 @@
+<?php
+
+namespace app\queues;
+
+use app\modules\construction\models\ConstructionPlan;
+use Yii;
+use yii\base\BaseObject;
+use yii\queue\JobInterface;
+
+class QueueSyncRup extends BaseObject implements JobInterface
+{
+    // public $a = 'a';
+
+    public $chunks = [];
+    public $url = 'https://isb.lkpp.go.id/isb-2/api/4eb7e158-259e-4a6a-9e20-fdf43ca9f678/json/15105/RUP-PaketPenyedia-Terumumkan/tipe/4:12/parameter/';
+    public $year = 2024;
+    public $klpd_code = 'D147';
+    public $sync_log_id = null;
+    public function execute($queue)
+    {
+        if (sizeof($this->chunks) == 0) {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $this->url . $this->year . ':' . $this->klpd_code,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+            ));
+
+            $response = curl_exec($curl);
+            curl_close($curl);
+            $data = json_decode($response);
+            $datachunks = array_chunk($data, 10);
+
+            foreach ($datachunks as $datachunk) {
+                foreach ($datachunk as $item) {
+                    Yii::$app->queue->push(new QueueSyncRup([
+                        'chunks' => $item,
+                        'year' => $this->year,
+                        'url' => $this->url,
+                        'klpd_code' => $this->klpd_code,
+                    ]));
+                }
+            }
+        } else {
+            $saved = [];
+            $notsaved = [];
+            foreach ($this->chunks as $row) {
+                $model = ConstructionPlan::findOne(['rup_code' => $row->kd_rup]);
+
+                if (!$model) {
+                    $model = new ConstructionPlan();
+                }
+                $model->rup_code = $row->kd_rup;
+                $model->package_name = $row->nama_paket;
+                $model->ceiling_value = $row->pagu;
+                $model->work_unit = $row->nama_satker;
+                $model->type_of_procurement = $row->jenis_pengadaan;
+                $model->procurement_method = $row->metode_pengadaan;
+                $model->election = $row->tgl_awal_pemilihan;
+
+                if ($model->save(false)) {
+                    $saved[] = $model->rup_code;
+                } else {
+                    $model->validate();
+                    $notsaved[] = [
+                        'id' => $model->rup_code,
+                        'errors' => $model->errors,
+                    ];
+                }
+            }
+
+
+            if (sizeof($notsaved) > 0) {
+                Yii::error(['saved' => $saved, 'not saved' => $notsaved]);
+                echo json_encode(['saved' => $saved, 'not saved' => $notsaved]);
+            }
+        }
+    }
+}

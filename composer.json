@@ -1,0 +1,89 @@
+{
+    "name": "yiisoft/yii2-app-basic",
+    "description": "Yii 2 Basic Project Template",
+    "keywords": ["yii2", "framework", "basic", "project template"],
+    "homepage": "http://www.yiiframework.com/",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "~2.0.14",
+        "yiisoft/yii2-bootstrap5": "*",
+        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
+        "bower-asset/datatables":"~1.10.0",
+        "bower-asset/datatables-plugins":"~1.10.0",
+        "bower-asset/datatables-responsive":"~2.2.3",
+        "bower-asset/datatables-buttons":"~1.5.6",
+        "bajhoe/yii2-user":"*",
+        "dektrium/yii2-rbac":"*",
+        "miloschuman/yii2-highcharts-widget": "^7.0",
+        "yiisoft/factory":"@dev",
+        "yiisoft/widget":"@dev",
+        "kartik-v/yii2-grid": "@dev",
+        "kartik-v/yii2-widgets": "dev-master",
+        "kartik-v/yii2-date-range": "dev-master",
+        "kartik-v/yii2-dropdown-x": "@dev",
+        "kartik-v/yii2-bootstrap5-dropdown" : "@dev",
+        "kartik-v/yii2-export": "^1.4.2",
+        "kartik-v/yii2-number": "dev-master",
+        "kartik-v/yii2-icons": "@dev",
+        "kartik-v/yii2-password": "dev-master",
+        "kartik-v/yii2-checkbox-x": "dev-master",
+        "kartik-v/yii2-widget-fileinput": "dev-master",
+        "yiier/yii2-hashids": "*",
+        "bajhoe/yii2-widget-lightbox2" : "*",
+        "newerton/yii2-fancybox-3": "dev-master",
+        "filsh/yii2-oauth2-server": "^2.0",
+        "ramsey/uuid": ">=4.0.0",
+        "bajhoe/yii2-dynamicform": "*",
+        "2amigos/yii2-leaflet-extension" : "~1.0",
+        "kdn/yii2-json-editor": "*",
+        "yiisoft/yii2-imagine": "~2.2.0",
+        "yiisoft/yii2-queue": "^2.3",
+        "endroid/qr-code": "*",
+        "kartik-v/yii2-widget-colorinput": "dev-master",
+        "amoracr/yii2-backup": "*",
+        "kartik-v/yii2-editable": "@dev",
+        "yiisoft/yii2-symfonymailer": "^4.0",
+        "npm-asset/boxicons": "*",
+        "2amigos/yii2-ckeditor-widget": "*",
+        "ezyang/htmlpurifier": "^4.17",
+        "2amigos/yii2-tinymce-widget": "~1.1",
+        "giannisdag/yii2-check-login-attempts": "^1.1",
+        "coderius/yii2-hit-counter": "^1.0"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.1.0",
+        "yiisoft/yii2-gii": "~2.1.0",
+        "yiisoft/yii2-faker": "~2.0.0",
+        "insolita/yii2-migration-generator": "~3.1",
+        "infinindotech/yii2-template-generator": "dev-main"
+    },
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "enabled": false
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "composer",
+            "url": "https://iks.repo.pacman.infinindotech.com"
+        }
+    ]
+}

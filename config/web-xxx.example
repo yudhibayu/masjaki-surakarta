@@ -1,0 +1,128 @@
+<?php
+$shared_modcom = require __DIR__ . '/shared-modcom.php';
+$shared_config = require __DIR__ . '/shared-config.php';
+$database         = require __DIR__ . '/db-development.php';
+
+//change this!
+$home_url         = 'https://yii2-template-bs5.clcc.localhost';
+$web_url_text     = 'infinindotech.com';
+$bcc_email        = 'admin@infinindotech.com';
+$admin_email      = 'admin@infinindotech.com';
+$sender_email     = 'test_noreply@infinindotech.com';
+$hashkey          = 'ab0afddf2e94c043a32b8f677adcsd54';
+$smtp_host        = 'mail.infinindotech.com';
+$smtp_port        = '465';
+$smtp_username    = 'test_noreply@infinindotech.com';
+$smtp_password    = 'iks1234!';
+
+$config = [
+    'id'        => 'basic',
+    'name'      => $shared_config['name'],
+    'homeUrl'   => $home_url,
+    'version'   => $shared_config['version'],
+    'basePath'  => dirname(__DIR__),
+    'language'  => $shared_config['language'],
+    'timeZone'  => $shared_config['timeZone'],
+    'bootstrap' => ['log', 'oauth2'],
+    'aliases'   => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
+    //=============== Modules START =====================
+    'modules' => [],
+    //=============== Modules END =====================
+    
+    //=============== Components START =====================
+    'components' => [
+        //Primary DB
+        'db' => $database['db'], 
+        //Secondary DB
+        'db2' => $database['db2'], 
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => true,
+            'transport' => [ //ini dipakai jika nilai diatas false
+                'class' => 'Swift_SmtpTransport',
+                'host' => $smtp_host, 
+                'username' => $smtp_username,
+                'password' => $smtp_password,
+                'port' => $smtp_port, 
+                'encryption' => 'tls',
+            ],
+        ],
+    ],
+    //=============== Components END =====================
+
+    'params' => [
+
+        //Email Report
+        'footerEmail'      => $shared_config['name'].' Mailing System',
+        'logoEmail'        => 'images/'.$shared_config['logo_email'],
+        'bccEmail'         => $bcc_email,
+        'adminEmail'       => $admin_email,
+        'senderName'       => $shared_config['name'].' Mailer',
+        'senderEmail'      => $sender_email,
+        'subjectEmail'     => 'Notifikasi '.$shared_config['name'],
+        
+        //Sitewide
+        'version'            => $shared_config['version'],
+        'webUrlText'         => $web_url_text,
+        'name'               => $shared_config['name'],
+        'subtitle'           => $shared_config['subtitle'],
+        'slogan'             => $shared_config['slogan'],
+        'homeUrl'            => $home_url,
+        'logoWeb'            => 'images/'.$shared_config['logo_web'],
+        'formatter'          => $shared_config['formatter'],
+        'language'           => $shared_config['language'],
+        'timeZone'           => $shared_config['timeZone'],
+        'subtitle'           => $shared_config['subtitle'],
+        'copyright'          => '&copy; '.$shared_config['name'],
+        'enableLogin'        => $shared_config['enableLogin'],
+        'enableYearLogin'    => $shared_config['enableYearLogin'],
+        'enableRegistration' => $shared_config['enableRegistration'],
+        'hashkey'            => $hashkey,
+        'hashExpiration'     => 7,
+        'api'                => $shared_config['api'],
+        'frontEndTheme'      => $shared_config['frontEndTheme'],
+        'backEndTheme'       => $shared_config['backEndTheme'],
+        'bsVersion'          => '5.x',
+        //Socials
+        'socials'            => $shared_config['socials']
+    ],
+];
+
+$config['modules'] = array_merge($config['modules'],$shared_modcom['modules']);
+$config['components'] = array_merge($config['components'],$shared_modcom['components']);
+
+if (YII_ENV_DEV) {
+    // configuration adjustments for 'dev' environment
+    $config['bootstrap'][] = 'debug';
+    $config['modules']['debug'] = [
+        'class' => 'yii\debug\Module',
+        // uncomment the following to add your IP if you are not connecting from localhost.
+        'allowedIPs' => ['127.0.0.1', '::1', 'localhost'],
+    ];
+
+    $config['bootstrap'][] = 'gii';
+    $config['modules']['gii'] = [
+        'class' => 'yii\gii\Module',
+        // uncomment the following to add your IP if you are not connecting from localhost.
+        'allowedIPs' => ['127.0.0.1', '::1', 'localhost'],
+        'generators' => [
+            'crud' => [ 
+                'class' => 'app\templates\crud\Generator', 
+                'templates' => [
+                    'Bajhoe-CRUD' => '@app/templates/crud/default',
+                ]
+                ],
+            'model' => [ 
+                'class' => 'app\templates\model\Generator', 
+                'templates' => [
+                    'Bajhoe-Model' => '@app/templates/model/default',
+                ]
+            ]
+        ],
+    ];
+}
+
+return $config;

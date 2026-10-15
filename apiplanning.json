@@ -1,0 +1,220 @@
+{
+	"info": {
+		"_postman_id": "12865572-7be6-4ed6-ac67-4d67f7518b17",
+		"name": "PBJ NEW",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11537643"
+	},
+	"item": [
+		{
+			"name": "RUP Penyedia",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://isb.lkpp.go.id/isb/api/3625e929-608c-47a3-b46e-c3df3232bfe9/json/736986738/PaketPenyediaOpt1618/tipe/4:12/parameter/2022:D101",
+					"protocol": "https",
+					"host": [
+						"isb",
+						"lkpp",
+						"go",
+						"id"
+					],
+					"path": [
+						"isb",
+						"api",
+						"3625e929-608c-47a3-b46e-c3df3232bfe9",
+						"json",
+						"736986738",
+						"PaketPenyediaOpt1618",
+						"tipe",
+						"4:12",
+						"parameter",
+						"2022:D101"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RUP Swakelola",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://isb.lkpp.go.id/isb/api/e5cb9a2e-adc8-42f2-aa7a-f10e944e5c03/json/736986739/PaketSwakelolaOpt1618/tipe/4:12/parameter/2022:D101",
+					"protocol": "https",
+					"host": [
+						"isb",
+						"lkpp",
+						"go",
+						"id"
+					],
+					"path": [
+						"isb",
+						"api",
+						"e5cb9a2e-adc8-42f2-aa7a-f10e944e5c03",
+						"json",
+						"736986739",
+						"PaketSwakelolaOpt1618",
+						"tipe",
+						"4:12",
+						"parameter",
+						"2022:D101"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Anggaran RUP Penyedia",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://isb.lkpp.go.id/isb/api/d0b8cb2e-510d-4e6a-b7ce-c4a21c49819f/json/141310126/PaketAnggaranPenyedia1618/tipe/4:12/parameter/2022:D101",
+					"protocol": "https",
+					"host": [
+						"isb",
+						"lkpp",
+						"go",
+						"id"
+					],
+					"path": [
+						"isb",
+						"api",
+						"d0b8cb2e-510d-4e6a-b7ce-c4a21c49819f",
+						"json",
+						"141310126",
+						"PaketAnggaranPenyedia1618",
+						"tipe",
+						"4:12",
+						"parameter",
+						"2022:D101"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Anggaran RUP Swakelola",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://isb.lkpp.go.id/isb/api/8ccb1898-d6ae-42e2-b6dd-02fe8a7ac21c/json/736986741/PaketAnggaranSwakelola1618/tipe/4:12/parameter/2022:D101",
+					"protocol": "https",
+					"host": [
+						"isb",
+						"lkpp",
+						"go",
+						"id"
+					],
+					"path": [
+						"isb",
+						"api",
+						"8ccb1898-d6ae-42e2-b6dd-02fe8a7ac21c",
+						"json",
+						"736986741",
+						"PaketAnggaranSwakelola1618",
+						"tipe",
+						"4:12",
+						"parameter",
+						"2022:D101"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Master Satker RUP",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://isb.lkpp.go.id/isb/api/aa1b57eb-d727-48e4-b413-cc4f8c30cabb/json/736987665/MasterSatkerRUP/tipe/12:12/parameter/D101:2022",
+					"protocol": "https",
+					"host": [
+						"isb",
+						"lkpp",
+						"go",
+						"id"
+					],
+					"path": [
+						"isb",
+						"api",
+						"aa1b57eb-d727-48e4-b413-cc4f8c30cabb",
+						"json",
+						"736987665",
+						"MasterSatkerRUP",
+						"tipe",
+						"12:12",
+						"parameter",
+						"D101:2022"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RUP Program",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://isb.lkpp.go.id/isb/api/a21b1b07-53b6-43a7-beb6-aaf31c64accc/json/736986745/ProgramMasterRUP/tipe/4:12/parameter/2022:D101",
+					"protocol": "https",
+					"host": [
+						"isb",
+						"lkpp",
+						"go",
+						"id"
+					],
+					"path": [
+						"isb",
+						"api",
+						"a21b1b07-53b6-43a7-beb6-aaf31c64accc",
+						"json",
+						"736986745",
+						"ProgramMasterRUP",
+						"tipe",
+						"4:12",
+						"parameter",
+						"2022:D101"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RUP Kegiatan",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://isb.lkpp.go.id/isb/api/2a8d9d46-7800-44fd-ab5d-cf41d7c81404/json/736986744/KegiatanMasterRUP/tipe/4:12/parameter/2022:D101",
+					"protocol": "https",
+					"host": [
+						"isb",
+						"lkpp",
+						"go",
+						"id"
+					],
+					"path": [
+						"isb",
+						"api",
+						"2a8d9d46-7800-44fd-ab5d-cf41d7c81404",
+						"json",
+						"736986744",
+						"KegiatanMasterRUP",
+						"tipe",
+						"4:12",
+						"parameter",
+						"2022:D101"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

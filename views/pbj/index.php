@@ -1,0 +1,119 @@
+<?php
+
+/* @var $this yii\web\View */
+
+use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\widgets\Pjax;
+use kartik\grid\GridView;
+use yii\widgets\Breadcrumbs;
+
+$this->title = Yii::t('app', 'List of Construction Work');
+// Yii::$app->name 
+$this->params['breadcrumbs'][] = $this->title;
+
+?>
+<div class="container mt-4">
+  <div class="card shadow-sm border-0 overflow-hidden" style="border-radius: 12px;">
+    <div class="card-header pt-5 px-5 py-3" style="border-radius: 12px 12px 0 0;">
+      <h3 class="mb-3"><i class="menu-icon tf-icons bx bx-buildings"></i> <?= Yii::t('app', 'List of Construction Work') ?></h3>
+      <?php echo Breadcrumbs::widget([
+        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        'class' => 'breadcrumb mb-0',
+        'itemTemplate' => "<li class=\"breadcrumb-item\">{link}</li>\n",
+        'activeItemTemplate' => "<li class=\"breadcrumb-item active\" aria-current=\"page\">{link}</li>\n",
+      ]); ?>
+    </div>
+
+    <?php if (Yii::$app->user->isGuest): ?>
+      <form method="get" action="<?= Html::encode(Url::to(['/pbj'])) ?>" class="d-flex align-items-end gap-2 px-5 pt-4">
+        <div>
+          <label for="pbj-tahun" class="form-label">Tahun Anggaran</label>
+          <?= Html::input('number', 'tahun', $year, ['id' => 'pbj-tahun', 'class' => 'form-control', 'min' => 2000, 'max' => 2100, 'required' => true]) ?>
+        </div>
+        <?= Html::submitButton('Tampilkan', ['class' => 'btn btn-primary']) ?>
+      </form>
+    <?php endif; ?>
+
+    <?php Pjax::begin(); ?>
+    <div class="table-responsive p-3 p-md-5">
+      <!-- <h4 class="mb-3">Data Pekerjaan konstruksi</h4> -->
+      <?= GridView::widget([
+        'dataProvider' => $dataProviderTender,
+        'tableOptions' => ['class' => 'table table-light table-striped table-borderless table-hover', 'style' => 'font-size:13px'],
+        'pager' => [
+          'options' => ['class' => 'pagination pagination-circle justify-content-center mt-3'],
+          'linkContainerOptions' => ['class' => 'page-item'],
+          'linkOptions' => ['class' => 'page-link'],
+          'disabledListItemSubTagOptions' => ['tag' => 'a', 'class' => 'page-link'],
+          'activePageCssClass' => 'active',
+          'disabledPageCssClass' => 'disabled',
+          'firstPageLabel' => Yii::t('app', 'First'),
+          'lastPageLabel' => Yii::t('app', 'Last'),
+        ],
+        'filterModel' => $searchModel,
+        'formatter' => ['class' => 'yii\i18n\Formatter','nullDisplay' => '-'],
+        // 'emptyText' => '<div class="text-center">-</div>',
+        // 'emptyTextOptions' => ['class' => 'text-center'],
+        'columns' => [
+          ['class' => 'yii\grid\SerialColumn', 'headerOptions' => ['style' => 'color: var(--accent-color);'],],
+          'name:ntext',
+          'namasatker',
+          'step',
+          'vendor_name:ntext',
+          [
+            'class' => 'yii\grid\ActionColumn',
+            'header' => Yii::t('app', 'Action'),
+            'headerOptions' => ['width' => '100', 'style' => 'color: var(--accent-color);'],
+            'template' => '{view}',
+            'buttons' => [
+              'view' => function ($url, $model, $key) {
+                return Html::a(
+                  '<i class="bx bx-show"></i> Detail',
+                  [
+                    Url::toRoute(['view', 'id' => Yii::$app->hasher->encode($model->kodelelang)])
+                  ],
+                  ['class' => 'btn btn-sm btn-primary', 'style' => 'margin: 2px;']
+                );
+              },
+            ],
+          ],
+        ],
+      ]); ?>
+    </div>
+    <?php Pjax::end(); ?>
+  </div>
+</div>
+
+<style>
+  .table {
+    margin: 0;
+    font-size: 14px;
+    color: #0022ff;
+    border: transparent !important;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+
+  .table th {
+    background-color: #f8f9fc;
+  }
+
+  .table tbody tr td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  .table tbody tr td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var tables = document.querySelectorAll('.kv-table-wrap');
+    tables.forEach(function(table) {
+      table.classList.remove('kv-table-wrap');
+    });
+  });
+</script>

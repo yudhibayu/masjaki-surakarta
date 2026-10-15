@@ -1,0 +1,68 @@
+<?php
+
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+
+/* @var $this yii\web\View */
+/* @var $model app\modules\monitoring\models\MonitoringWeatherSearch */
+/* @var $form yii\widgets\ActiveForm */
+?>
+
+<div class="monitoring-weather-search">
+
+    <?php $form = ActiveForm::begin([
+        'action' => ['index'],
+        'method' => 'get',
+        'options' => [
+            'data-pjax' => 1
+        ],
+    ]); ?>
+
+    <?= $form->field($model, 'name') ?>
+
+    <?= $form->field($model, 'ref_cuaca_id') ?>
+
+    <?= $form->field($model, 'monitoring_progress_id') ?>
+
+    <?= $form->field($model, 'note') ?>
+
+    <?= $form->field($model, 'time_from') ?>
+
+    <?php // echo $form->field($model, 'time_to') ?>
+
+    <?php // echo $form->field($model, 'created_at') ?>
+
+    <?php // echo $form->field($model, 'updated_at') ?>
+
+    <?php // echo $form->field($model, 'created_by') ?>
+
+    <?php // echo $form->field($model, 'updated_by') ?>
+
+    <div class="form-group">
+        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-outline-secondary form-reset']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+</div>
+<?php 
+$this->registerJs( 
+<<< EOT_JS_CODE
+
+$(document).ready(function(){
+    $('.form-reset').on('click', function () {
+        $.ajax({
+            url:"reset_session",
+            type: "POST",
+            //data:"",
+            success:function(data){
+            }
+        });
+    });
+});
+
+EOT_JS_CODE
+
+);
+?>

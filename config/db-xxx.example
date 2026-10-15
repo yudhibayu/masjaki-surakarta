@@ -1,0 +1,46 @@
+<?php
+
+return [
+    'db' => [//Main DB
+        'class' => 'yii\db\Connection',
+        'dsn' => 'mysql:host=localhost;dbname=XXX',
+        'username' => 'XXX',
+        'password' => 'XXX',
+        'charset' => 'utf8mb4',
+
+        // Schema cache options (for production environment)
+        //'enableSchemaCache' => true,
+        //'schemaCacheDuration' => 60,
+        //'schemaCache' => 'cache',
+        //'enableQueryCache' => true,
+        //'queryCacheDuration' => 5, // five seconds
+    ],
+    'db2' => [//Secondary DB
+        'class' => 'yii\db\Connection',
+        'dsn' => 'mysql:host=localhost;dbname=XXX',
+        'username' => 'XXX',
+        'password' => 'XXX',
+        'charset' => 'utf8mb4',
+
+        // Schema cache options (for production environment)
+        //'enableSchemaCache' => true,
+        //'schemaCacheDuration' => 60,
+        //'schemaCache' => 'cache',
+        //'enableQueryCache' => true,
+        //'queryCacheDuration' => 5, // five seconds
+    ],
+    'db3' => [//additional DB
+        'class' => 'yii\db\Connection',
+        'dsn' => 'mysql:host=localhost;dbname=XXX',
+        'username' => 'XXX',
+        'password' => 'XXX',
+        'charset' => 'utf8mb4',
+
+        // Schema cache options (for production environment)
+        //'enableSchemaCache' => true,
+        //'schemaCacheDuration' => 60,
+        //'schemaCache' => 'cache',
+        //'enableQueryCache' => true,
+        //'queryCacheDuration' => 5, // five seconds
+    ],
+];

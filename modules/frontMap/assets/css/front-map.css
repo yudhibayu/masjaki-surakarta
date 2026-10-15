@@ -1,0 +1,50 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+
+#map {
+    height: 100vh;
+    width: 100%;
+    font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.leaflet-top {
+    top: 25% !important;
+}
+
+.lorem {
+    font-style: italic;
+    color: #AAA;
+}
+
+.sidebar {
+    top: 120px;
+    height: 70%;
+    transition: width .5s;
+}
+.sidebar-tabs {
+    border: 2px solid rgba(0,0,0,.2);
+    top: 0;
+    bottom: 0;
+    height: 70%;
+    background-color: #fff;
+}
+
+.sidebar-tabs, .sidebar-tabs>ul {
+    position: absolute;
+    width: 40px;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+@media (max-width: 992px) {
+#map {
+        top: 70px;
+        height: 120vw;
+        width: 100%;
+        font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+    }
+}
