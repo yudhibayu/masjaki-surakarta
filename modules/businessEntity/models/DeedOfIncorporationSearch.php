@@ -1,0 +1,92 @@
+<?php
+
+namespace app\modules\businessEntity\models;
+
+use yii\base\Model;
+use yii\data\ActiveDataProvider;
+use app\modules\businessEntity\models\DeedOfIncorporation;
+
+/**
+ * DeedOfIncorporationSearch represents the model behind the search form of `app\modules\businessEntity\models\DeedOfIncorporation`.
+ */
+class DeedOfIncorporationSearch extends DeedOfIncorporation
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['id', 'file_size'], 'integer'],
+            [['deed_number', 'date_of_deed', 'file_extension', 'file_name', 'file_path', 'notary_public', 'deed_file', 'created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'], 'safe'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function scenarios()
+    {
+        // bypass scenarios() implementation in the parent class
+        return Model::scenarios();
+    }
+
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function search($params, $id_business_entity = null, $pagesize = null)
+    {
+        $query = DeedOfIncorporation::find();
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'created_at' => SORT_DESC,
+                ],
+            ],
+        ]);
+
+        if ($id_business_entity) {
+            $query->andWhere(['id_business_entity' => $id_business_entity]);
+        }
+        if ($pagesize) {
+            $dataProvider->pagination->pageSize = $pagesize;
+        }
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'deed_number' => $this->deed_number,
+            'date_of_deed' => $this->date_of_deed,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'deleted_at' => $this->deleted_at,
+            'file_size' => $this->file_size,
+        ]);
+
+        $query->andFilterWhere(['like', 'notary_public', $this->notary_public])
+            ->andFilterWhere(['like', 'deed_file', $this->deed_file])
+            ->andFilterWhere(['like', 'created_by', $this->created_by])
+            ->andFilterWhere(['like', 'updated_by', $this->updated_by])
+            ->andFilterWhere(['like', 'file_path', $this->file_path])
+            ->andFilterWhere(['like', 'file_extension', $this->file_extension])
+            ->andFilterWhere(['like', 'file_name', $this->file_name])
+            ->andFilterWhere(['like', 'deleted_by', $this->deleted_by]);
+
+        return $dataProvider;
+    }
+}

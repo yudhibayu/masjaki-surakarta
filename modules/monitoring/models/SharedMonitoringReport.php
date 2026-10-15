@@ -1,0 +1,262 @@
+<?php
+
+namespace app\modules\monitoring\models;
+
+use Yii;
+
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use app\overrides\user\models\User;
+
+/**
+ * This is the model class for table "shared_monitoring_report".
+ *
+ * @property int $id
+ * @property int $task_id
+ * @property string $type
+ * @property string|null $month
+ * @property string|null $week
+ * @property string|null $day
+ * @property int $is_spec
+ * @property string $expired_at
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property int|null $created_by
+ * @property int|null $updated_by
+ * 
+ * @property MonitoringTask $monitoringTask
+ */
+class SharedMonitoringReport extends \yii\db\ActiveRecord
+{
+    public $sess;
+
+    /**
+     * Init Object Controller
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+        $this->sess = Yii::$app->session;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'shared_monitoring_report';
+    }
+
+    /**
+     * @return \yii\db\Connection the database connection used by this AR class.
+     */
+    public static function getDb()
+    {
+        return Yii::$app->get('db');
+    }
+
+    /**
+     * Model Behaviors
+     * Blameable = table field harus ada: created_by dan updated_by
+     * Timestamp = table field harus ada: created_at dan updated_at
+     * @return void
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'class' => BlameableBehavior::class,
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['task_id', 'type'], 'required'],
+            [['task_id', 'is_spec', 'created_by', 'updated_by'], 'integer'],
+            [['expired_at', 'created_at', 'updated_at'], 'safe'],
+            [['type', 'month', 'week', 'day'], 'string', 'max' => 255],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'task_id' => Yii::t('monitoring', 'Task ID'),
+            'type' => Yii::t('monitoring', 'Type'),
+            'month' => Yii::t('monitoring', 'Month'),
+            'week' => Yii::t('monitoring', 'Week'),
+            'day' => Yii::t('monitoring', 'Day'),
+            'is_spec' => Yii::t('monitoring', 'Is Spec'),
+            'expired_at' => Yii::t('app', 'Expired At'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_by' => Yii::t('app', 'Updated By'),
+        ];
+    }
+    // Daerah Start relation
+
+    /**
+     * Get created_by relation from [[User]] table.
+     *
+     * @return \yii\db\ActiveQuery|UserQuery
+     */
+    public function getUserMaker()
+    {
+        return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
+
+    /**
+     * Get updated_by relation from [[User]] table.
+     *
+     * @return \yii\db\ActiveQuery|UserQuery
+     */
+    public function getUserUpdater()
+    {
+        return $this->hasOne(User::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * Gets query for [[MonitoringTask]].
+     *
+     * @return \yii\db\ActiveQuery|MonitoringTaskQuery
+     */
+    public function getMonitoringTask()
+    {
+        return $this->hasOne(MonitoringTask::class, ['id' => 'task_id']);
+    }
+    //Daerah Akhir Relation
+
+
+
+    /**
+     * {@inheritdoc}
+     * @return SharedMonitoringReportQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new SharedMonitoringReportQuery(get_called_class());
+    }
+
+    //Daerah Start Virtual Attribute
+
+    /**
+     * Virtual Attribute for Full Name
+     *
+     * @return string
+     */
+    public function getNamaLengkap()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Virtual Attribute for Created By Name
+     *
+     * @return \yii\db\ActiveQuery|UserQuery
+     */
+    public function getMaker()
+    {
+        $data = null;
+        if ($this->userMaker) {
+            $data = isset($this->userMaker->profile->name) ? $this->userMaker->profile->name : $this->userMaker->username;
+        }
+        return $data;
+    }
+
+    /**
+     * Virtual Attribute for Updated By Name
+     *
+     * @return \yii\db\ActiveQuery|UserTypeQuery
+     */
+    public function getUpdater()
+    {
+        $data = null;
+        if ($this->userUpdater) {
+            $data = isset($this->userUpdater->profile->name) ? $this->userUpdater->profile->name : $this->userUpdater->username;
+        }
+        return $data;
+    }
+
+    //Daerah Akhir Virtual Attribute
+
+    //Daerah Start Event Driven
+    /**
+     * Sebelum melakukan validasi input dan sebelum event beforeSave
+     *
+     * @return void
+     */
+    public function beforeValidate()
+    {
+        // Converting to db standard format
+        // cth: $this->tanggal_mulai   = $this->tanggal_mulai ? Yii::$app->formatter->asDate($this->tanggal_mulai, 'yyyy-MM-dd') : null;
+
+        parent::beforeValidate();
+        return true;
+    }
+
+    /**
+     * Sebelum disimpan, sesuaikan dnegan format db
+     *
+     * @param [type] $insert
+     * @return void
+     */
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            // tulis sini jika ini adalah new insert
+        }
+        // tulis sini saat update/insert
+
+        parent::beforeSave($insert);
+        return true;
+    }
+
+    /**
+     * Setelah query ditemukan/selesai dan akan ditampilkan ke view
+     *
+     * @return void
+     */
+    public function afterFind()
+    {
+        // monggo
+
+        parent::afterFind();
+        return true;
+    }
+
+    /**
+     * Sebelum hapus
+     *
+     * @return void
+     */
+    public function beforeDelete()
+    {
+        // monggo
+
+        parent::beforeDelete();
+        return true;
+    }
+    //Daerah Akhir Event Driven
+
+}

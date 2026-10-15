@@ -1,0 +1,9 @@
+> DPUPR perlu membuat permohonan izin pemakaian API ke BPBJ;
+> Perlu dibuat API minimal satu data publik atau data yg bisa dipakai OPD lain;
+> Recovery kata sandi melalui email masih perlu perbaikan (muncul halaman input dua kali);
+> Caption keterangan upload maksimal 150 kb;
+
+> Dari email notif dikasih blank, pindahkan aja ke tampilan login.
+> Double ganti password
+> Kode referensi
+> Tampilan tombol yang banyak dibuat dropdown aksi.

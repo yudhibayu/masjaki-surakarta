@@ -1,0 +1,212 @@
+<?php
+
+namespace app\modules\api\v1\models;
+
+use Yii;
+
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\i18n\Formatter;
+use yii\db\ActiveRecord;
+use app\overrides\user\models\User;
+
+/**
+ * This is the model class for table "api_access_token".
+ *
+ * @property int $id ID
+ * @property string $name Name
+ * @property string $token Token
+ * @property string|null $created_at Created At
+ * @property int|null $created_by Created By
+ * @property string|null $updated_at Updated At
+ * @property int|null $updated_by Updated By
+ */
+class ApiAccessToken extends \yii\db\ActiveRecord
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'api_access_token';
+    }
+
+    /**
+     * Model Behaviors
+     * Blameable = table field harus ada: created_by dan updated_by
+     * Timestamp = table field harus ada: created_at dan updated_at
+     * @return void
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'class' => BlameableBehavior::className(),
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['name', 'token'], 'required'],
+            [['created_at', 'updated_at'], 'safe'],
+            [['created_by', 'updated_by'], 'integer'],
+            [['name'], 'string', 'max' => 255],
+            [['token'], 'string', 'max' => 36],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'name' => Yii::t('app', 'Name'),
+            'token' => Yii::t('app', 'Token'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'updated_by' => Yii::t('app', 'Updated By'),
+        ];
+    }
+// Daerah Start relation
+
+    /**
+     * Get created_by relation from [[User]] table.
+     *
+     * @return \yii\db\ActiveQuery|UserQuery
+     */
+    public function getUserMaker()
+    {
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
+    }
+
+    /**
+     * Get updated_by relation from [[User]] table.
+     *
+     * @return \yii\db\ActiveQuery|UserQuery
+     */
+    public function getUserUpdater()
+    {
+        return $this->hasOne(User::className(), ['id' => 'updated_by']);
+    }
+//Daerah Akhir Relation
+
+
+
+    /**
+     * {@inheritdoc}
+     * @return ApiAccessTokenQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new ApiAccessTokenQuery(get_called_class());
+    }
+
+//Daerah Start Virtual Attribute
+
+     /**
+     * Virtual Attribute for Created By Name
+     *
+     * @return \yii\db\ActiveQuery|UserQuery
+     */
+    public function getMaker()
+    {
+        $data = null;
+        if ($this->userMaker) {
+            $data = $this->userMaker->profile->name ? $this->userMaker->profile->name : $this->userMaker->username;
+        }
+        return $data;
+    }
+
+     /**
+     * Virtual Attribute for Updated By Name
+     *
+     * @return \yii\db\ActiveQuery|UserTypeQuery
+     */
+    public function getUpdater()
+    {
+        $data = null;
+        if ($this->userUpdater) {
+            $data = $this->userUpdater->profile->name ? $this->userUpdater->profile->name : $this->userUpdater->username;
+        }
+        return $data;
+    }
+
+//Daerah Akhir Virtual Attribute
+
+//Daerah Start Event Driven
+    /**
+     * Sebelum melakukan validasi input dan sebelum event beforeSave
+     *
+     * @return void
+     */
+    public function beforeValidate()
+    {
+            // Converting to db standard format
+            // cth: $this->tanggal_mulai   = $this->tanggal_mulai ? Yii::$app->formatter->asDate($this->tanggal_mulai, 'yyyy-MM-dd') : null;
+            
+            parent::beforeValidate();
+            return true;
+
+    }
+
+    /**
+     * Sebelum disimpan, sesuaikan dnegan format db
+     *
+     * @param [type] $insert
+     * @return void
+     */
+    public function beforeSave($insert)
+    {   
+        if ($insert) {
+            // tulis sini jika ini adalah new insert
+        }
+        // tulis sini saat update/insert
+ 
+        parent::beforeSave($insert);
+        return true;
+    } 
+
+    /**
+     * Setelah query ditemukan/selesai dan akan ditampilkan ke view
+     *
+     * @return void
+     */
+    public function afterFind()
+    { 
+        // monggo
+        
+        parent::afterFind();
+        return true;
+    }
+
+    /**
+     * Sebelum hapus
+     *
+     * @return void
+     */
+    public function beforeDelete()
+    {       
+        // monggo
+        
+        parent::beforeDelete();
+        return true;
+    }
+    //Daerah Akhir Event Driven
+
+}
