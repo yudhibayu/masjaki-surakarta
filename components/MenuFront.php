@@ -25,6 +25,7 @@ class MenuFront
                 'items' => [
                     ['label' => Yii::t('app', 'Home'), 'url' => ['/'], 'template' => '<a href="{url}">{label}</a>', 'class' => 'active'],
                     ['label' => Yii::t('app', 'Construction Work'), 'url' => ['/rup/pbj']],
+                    ['label' => 'Peraturan Jasa Konstruksi', 'url' => ['/peraturan-jasa-konstruksi']],
                     ['label' => Yii::t('app', 'Construction Market'), 'url' => ['/construction/construction-market']],
                     ['label' => Yii::t('app', 'Business Entity'), 'url' => ['/business-entity/business-entity']],
                     // ['label' => Yii::t('app', 'Map'), 'url' => ['/front-map'], 'template' => '<a href="{url}">{label}</a>', 'visible' => true ],

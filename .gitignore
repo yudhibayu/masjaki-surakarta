@@ -38,6 +38,8 @@ sql/*
 /web/uploads/*
 /web/favicon.ico
 /runtime/*
+/storage/*
+!/storage/.htaccess
 config/*development.php
 # Local credentials and production configuration
 /auth.json
