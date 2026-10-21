@@ -63,6 +63,7 @@ $menuItems = MenuFront::setMenu('better_front');
           <li><a href="/"><?= Yii::t('app', 'Home') ?></a></li>
           <li><a href="/pbj"><?= Yii::t('rup', 'Construction Work') ?></a></li>
           <li><a href="/peraturan-jasa-konstruksi">Peraturan Jasa Konstruksi</a></li>
+          <li><a href="/rekap-sertifikasi-tkk">Rekap Sertifikasi TKK</a></li>
           <li><a href="/cons-market"><?= Yii::t('app', 'Construction Market') ?></a></li>
           <li><a href="/badan-usaha"><?= Yii::t('app', 'Business Entity') ?></a></li>
           <li><a href="/berita"><?= Yii::t('app', 'News') ?></a></li>

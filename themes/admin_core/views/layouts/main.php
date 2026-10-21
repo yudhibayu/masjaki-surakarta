@@ -361,6 +361,12 @@ $user = Yii::$app->user->identity;
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="/references-masjaki/tkk">
+                                    <i class="menu-icon bx bx-badge-check"></i>
+                                    <span class="menu-title">Rekap Sertifikasi TKK</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="/report/report">
                                     <i class="menu-icon bx bx-file"></i>
                                     <span class="menu-title"><?= Yii::t('app', 'Report K3') ?></span>
