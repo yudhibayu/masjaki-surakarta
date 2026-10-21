@@ -32,7 +32,7 @@ CSS);
     <div class="tkk-public-summary__inner">
         <h1 class="visually-hidden"><?= Html::encode($this->title) ?></h1>
         <?= Html::beginForm(['/rekap-sertifikasi-tkk/index'], 'get', ['class' => 'tkk-public-summary__filter']) ?>
-            <?= Html::label('Pilih tahun anggaran', 'tkk-tahun', ['class' => 'tkk-public-summary__label']) ?>
+            <?= Html::label('Pilih tahun', 'tkk-tahun', ['class' => 'tkk-public-summary__label']) ?>
             <div class="tkk-public-summary__controls">
                 <?= Html::dropDownList('tahun', $filter->tahun, ['' => 'Semua tahun'] + $report['years'], [
                     'id' => 'tkk-tahun', 'class' => 'form-select tkk-public-summary__select',
