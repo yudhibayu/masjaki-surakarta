@@ -1,5 +1,7 @@
 <?php
 
+use app\components\TkkDateForm;
+use kartik\widgets\DatePicker;
 use app\modules\referencesMasjaki\models\PesertaFasilitasiSertifikasi;
 use kartik\select2\Select2;
 use yii\helpers\Html;
@@ -35,8 +37,18 @@ $selected = $selectedPerson ? [$selectedPerson->id => $selectedPerson->nama_leng
         <?= $form->field($record, 'status_sertifikasi')->dropDownList(PesertaFasilitasiSertifikasi::STATUS, ['prompt' => 'Pilih status']) ?>
         <p>Informasi SKK diisi setelah penerbitannya terkonfirmasi. Status kompeten tidak otomatis menerbitkan SKK.</p>
         <?= $form->field($record, 'nomor_skk')->textInput(['maxlength' => true]) ?>
-        <?= $form->field($record, 'tanggal_terbit_skk')->input('date') ?>
-        <?= $form->field($record, 'masa_berlaku_skk_hingga')->input('date') ?>
+        <?= $form->field($record, 'tanggal_terbit_skk', ['enableClientValidation' => false])->widget(DatePicker::class, [
+            'type' => DatePicker::TYPE_COMPONENT_APPEND,
+            'language' => 'id',
+            'options' => ['value' => TkkDateForm::display($record->tanggal_terbit_skk), 'placeholder' => 'dd-mm-yyyy', 'maxlength' => 10, 'autocomplete' => 'off'],
+            'pluginOptions' => ['format' => 'dd-mm-yyyy', 'autoclose' => true, 'todayHighlight' => true],
+        ]) ?>
+        <?= $form->field($record, 'masa_berlaku_skk_hingga', ['enableClientValidation' => false])->widget(DatePicker::class, [
+            'type' => DatePicker::TYPE_COMPONENT_APPEND,
+            'language' => 'id',
+            'options' => ['value' => TkkDateForm::display($record->masa_berlaku_skk_hingga), 'placeholder' => 'dd-mm-yyyy', 'maxlength' => 10, 'autocomplete' => 'off'],
+            'pluginOptions' => ['format' => 'dd-mm-yyyy', 'autoclose' => true, 'todayHighlight' => true],
+        ]) ?>
         <?= $form->field($record, 'keterangan')->textarea(['rows' => 3]) ?>
         <?= Html::submitButton('Simpan', ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Batal', ['index'], ['class' => 'btn btn-secondary']) ?>

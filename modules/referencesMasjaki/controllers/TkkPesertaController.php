@@ -2,6 +2,7 @@
 
 namespace app\modules\referencesMasjaki\controllers;
 
+use app\components\TkkDateForm;
 use app\modules\referencesMasjaki\models\KegiatanFasilitasiSertifikasi;
 use app\modules\referencesMasjaki\models\PesertaFasilitasiSertifikasi;
 use app\modules\referencesMasjaki\models\TenagaKerjaKonstruksi;
@@ -70,9 +71,12 @@ class TkkPesertaController extends TkkBaseController
 
     private function edit(PesertaFasilitasiSertifikasi $record)
     {
-        if ($record->load(Yii::$app->request->post()) && $record->save()) {
-            Yii::$app->session->setFlash('success', 'Keikutsertaan sertifikasi berhasil disimpan.');
-            return $this->redirect(['view', 'id' => $record->id]);
+        if ($record->load(Yii::$app->request->post())) {
+            $datesValid = TkkDateForm::normalize($record, ['tanggal_terbit_skk', 'masa_berlaku_skk_hingga']);
+            if ($datesValid && $record->save()) {
+                Yii::$app->session->setFlash('success', 'Keikutsertaan sertifikasi berhasil disimpan.');
+                return $this->redirect(['view', 'id' => $record->id]);
+            }
         }
         $selectedPerson = $record->tenaga_kerja_id ? TenagaKerjaKonstruksi::findOne($record->tenaga_kerja_id) : null;
         return $this->render('form', [

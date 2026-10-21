@@ -2,6 +2,7 @@
 
 namespace app\modules\referencesMasjaki\controllers;
 
+use app\components\TkkDateForm;
 use app\modules\referencesMasjaki\models\TenagaKerjaKonstruksi;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -40,9 +41,12 @@ class TkkTenagaKerjaController extends TkkBaseController
 
     private function edit(TenagaKerjaKonstruksi $record)
     {
-        if ($record->load(Yii::$app->request->post()) && $record->save()) {
-            Yii::$app->session->setFlash('success', 'Identitas tenaga kerja berhasil disimpan.');
-            return $this->redirect(['view', 'id' => $record->id]);
+        if ($record->load(Yii::$app->request->post())) {
+            $datesValid = TkkDateForm::normalize($record, ['tanggal_lahir']);
+            if ($datesValid && $record->save()) {
+                Yii::$app->session->setFlash('success', 'Identitas tenaga kerja berhasil disimpan.');
+                return $this->redirect(['view', 'id' => $record->id]);
+            }
         }
         return $this->render('form', ['record' => $record]);
     }

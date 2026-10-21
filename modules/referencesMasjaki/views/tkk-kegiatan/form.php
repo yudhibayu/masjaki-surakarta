@@ -1,5 +1,7 @@
 <?php
 
+use app\components\TkkDateForm;
+use kartik\widgets\DatePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -11,8 +13,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $form = ActiveForm::begin(); ?>
         <?= $form->field($record, 'nama_kegiatan')->textInput(['maxlength' => true]) ?>
         <?= $form->field($record, 'tahun_anggaran')->input('number', ['min' => 2000, 'max' => 2100]) ?>
-        <?= $form->field($record, 'tanggal_mulai')->input('date') ?>
-        <?= $form->field($record, 'tanggal_selesai')->input('date') ?>
+        <?= $form->field($record, 'tanggal_mulai', ['enableClientValidation' => false])->widget(DatePicker::class, [
+            'type' => DatePicker::TYPE_COMPONENT_APPEND,
+            'language' => 'id',
+            'options' => ['value' => TkkDateForm::display($record->tanggal_mulai), 'placeholder' => 'dd-mm-yyyy', 'maxlength' => 10, 'autocomplete' => 'off'],
+            'pluginOptions' => ['format' => 'dd-mm-yyyy', 'autoclose' => true, 'todayHighlight' => true],
+        ]) ?>
+        <?= $form->field($record, 'tanggal_selesai', ['enableClientValidation' => false])->widget(DatePicker::class, [
+            'type' => DatePicker::TYPE_COMPONENT_APPEND,
+            'language' => 'id',
+            'options' => ['value' => TkkDateForm::display($record->tanggal_selesai), 'placeholder' => 'dd-mm-yyyy', 'maxlength' => 10, 'autocomplete' => 'off'],
+            'pluginOptions' => ['format' => 'dd-mm-yyyy', 'autoclose' => true, 'todayHighlight' => true],
+        ]) ?>
         <?= $form->field($record, 'lokasi_kegiatan')->textInput(['maxlength' => true]) ?>
         <?= $form->field($record, 'lsp_id')->dropDownList($lsps, ['prompt' => 'Pilih LSP']) ?>
         <?= $form->field($record, 'keterangan')->textarea(['rows' => 3]) ?>

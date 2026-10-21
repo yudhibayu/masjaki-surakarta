@@ -2,6 +2,7 @@
 
 namespace app\modules\referencesMasjaki\controllers;
 
+use app\components\TkkDateForm;
 use app\modules\referencesMasjaki\models\KegiatanFasilitasiSertifikasi;
 use app\modules\referencesMasjaki\models\MasterLsp;
 use Yii;
@@ -67,10 +68,11 @@ class TkkKegiatanController extends TkkBaseController
     private function edit(KegiatanFasilitasiSertifikasi $record)
     {
         if ($record->load(Yii::$app->request->post())) {
+            $datesValid = TkkDateForm::normalize($record, ['tanggal_mulai', 'tanggal_selesai']);
             $lsp = MasterLsp::findOne($record->lsp_id);
             if ($lsp === null || (!$lsp->is_active && ($record->isNewRecord || $record->isAttributeChanged('lsp_id')))) {
                 $record->addError('lsp_id', 'LSP tidak aktif atau tidak ditemukan.');
-            } elseif ($record->save()) {
+            } elseif ($datesValid && $record->save()) {
                 Yii::$app->session->setFlash('success', 'Kegiatan berhasil disimpan.');
                 return $this->redirect(['view', 'id' => $record->id]);
             }

@@ -14,7 +14,7 @@ class TenagaKerjaKonstruksi extends TkkRecord
         return [
             [['nik', 'nama_lengkap'], 'filter', 'filter' => function ($value) { return $value === null ? null : trim($value); }],
             [['nik', 'nama_lengkap'], 'required'],
-            [['nik'], 'match', 'pattern' => '/\A[0-9]{16}\z/', 'message' => 'NIK harus terdiri dari 16 digit.'],
+            [['nik'], 'match', 'pattern' => '/^[0-9]{16}$/', 'message' => 'NIK harus terdiri dari 16 digit.'],
             [['nik'], 'unique'],
             [['nama_lengkap', 'asal_instansi'], 'string', 'max' => 150],
             [['jenis_kelamin'], 'in', 'range' => ['L', 'P']],

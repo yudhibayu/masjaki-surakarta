@@ -11,6 +11,7 @@ require dirname(__DIR__, 2) . '/vendor/yiisoft/yii2/Yii.php';
 
 use app\components\TkkDokumenService;
 use app\components\TkkDokumenStorage;
+use app\components\TkkDateForm;
 use app\components\TkkPublikRekap;
 use app\modules\referencesMasjaki\models\DokumenPesertaSertifikasi;
 use app\modules\referencesMasjaki\models\KegiatanFasilitasiSertifikasi;
@@ -93,8 +94,28 @@ try {
     $publicationMigration = new m261021_000002_add_tkk_kegiatan_publication(['db' => $app->db]);
     $publicationMigration->safeUp();
 
+    $dateForm = new TenagaKerjaKonstruksi(['tanggal_lahir' => '29-02-2024']);
+    TkkDateForm::normalize($dateForm, ['tanggal_lahir']);
+    tkkCheck($dateForm->tanggal_lahir === '2024-02-29'
+        && TkkDateForm::display($dateForm->tanggal_lahir) === '29-02-2024',
+        'Tanggal formulir dikonversi dua arah');
+    $dateForm->tanggal_lahir = '29-02-2025';
+    tkkCheck(!TkkDateForm::normalize($dateForm, ['tanggal_lahir'])
+        && $dateForm->hasErrors('tanggal_lahir') && $dateForm->tanggal_lahir === '29-02-2025',
+        'Tanggal kalender tidak valid ditolak');
+    $dateForm->clearErrors();
+    $dateForm->tanggal_lahir = '2024-02-29';
+    tkkCheck(!TkkDateForm::normalize($dateForm, ['tanggal_lahir']) && $dateForm->hasErrors('tanggal_lahir'),
+        'Form menolak format selain dd-mm-yyyy');
+
     $person = new TenagaKerjaKonstruksi(['nik' => '3372010101900001', 'nama_lengkap' => 'Contoh Peserta', 'jenis_kelamin' => 'L']);
     tkkCheck($person->save(), 'Identitas tenaga kerja tersimpan');
+    foreach ($person->getValidators('nik') as $validator) {
+        if ($validator instanceof yii\validators\RegularExpressionValidator) {
+            tkkCheck(yii\helpers\Html::escapeJsRegularExpression($validator->pattern) === '/^[0-9]{16}$/',
+                'Pola NIK dapat divalidasi konsisten di browser dan server');
+        }
+    }
     $duplicate = new TenagaKerjaKonstruksi(['nik' => $person->nik, 'nama_lengkap' => 'Nama Lain']);
     tkkCheck(!$duplicate->save() && $duplicate->hasErrors('nik'), 'NIK duplikat ditolak');
     $invalidNik = new TenagaKerjaKonstruksi(['nik' => '1234', 'nama_lengkap' => 'Tidak Valid']);
@@ -195,6 +216,19 @@ try {
         && (bool) preg_match('/data-tkk-stat="keikutsertaan">3</', $dashboardHtml)
         && (bool) preg_match('/data-tkk-stat="skk">1</', $dashboardHtml),
         'Dashboard membedakan orang unik, transaksi, dan SKK terbit');
+    $person->tanggal_lahir = '2024-02-29';
+    tkkCheck($person->save(), 'Tanggal lahir tersimpan dalam format database');
+    foreach ([
+        'tkk-tenaga-kerja/update' => ['id' => $person->id, 'date' => '29-02-2024', 'fields' => 1],
+        'tkk-kegiatan/update' => ['id' => $activity2026->id, 'date' => '01-06-2026', 'fields' => 2],
+        'tkk-peserta/update' => ['id' => $second->id, 'date' => '01-07-2026', 'fields' => 2],
+    ] as $route => $check) {
+        $html = $app->getModule('references-masjaki')->runAction($route, ['id' => $check['id']]);
+        tkkCheck(strpos($html, 'value="' . $check['date'] . '"') !== false
+            && substr_count($html, 'placeholder="dd-mm-yyyy"') === $check['fields']
+            && substr_count($html, 'input-group date') === $check['fields'],
+            'Form edit ' . $route . ' menampilkan date picker dd-mm-yyyy');
+    }
     foreach ([
         'tkk-tenaga-kerja/index', 'tkk-tenaga-kerja/create', 'tkk-tenaga-kerja/view' => ['id' => $person->id],
         'tkk-lsp/index', 'tkk-lsp/create', 'tkk-kegiatan/index', 'tkk-kegiatan/create',
