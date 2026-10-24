@@ -367,6 +367,12 @@ $user = Yii::$app->user->identity;
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="/references-masjaki/pembinaan">
+                                    <i class="menu-icon bx bx-bar-chart-alt-2"></i>
+                                    <span class="menu-title">Pembinaan BUJK dan Masyarakat</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="/report/report">
                                     <i class="menu-icon bx bx-file"></i>
                                     <span class="menu-title"><?= Yii::t('app', 'Report K3') ?></span>

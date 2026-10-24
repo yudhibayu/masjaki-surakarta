@@ -17,6 +17,7 @@ use app\modules\referencesMasjaki\models\RefProvinsi;
 use app\modules\referencesMasjaki\models\RefKecamatan;
 use app\modules\referencesMasjaki\models\RefKelurahan;
 use app\modules\referencesMasjaki\models\FormOfBusiness;
+use app\modules\referencesMasjaki\models\PesertaPembinaan;
 
 /**
  * This is the model class for table "business_entity".
@@ -351,6 +352,11 @@ class BusinessEntity extends \yii\db\ActiveRecord
     public function getOwner()
     {
         return $this->hasMany(Owner::class, ['id_business_entity' => 'id']);
+    }
+
+    public function getPesertaPembinaan()
+    {
+        return $this->hasMany(PesertaPembinaan::class, ['id_business_entity' => 'id']);
     }
 
     /**
