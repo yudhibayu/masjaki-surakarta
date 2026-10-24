@@ -230,26 +230,28 @@ class KelurahanController extends Controller
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $out = [];
 
-        if (Yii::$app->request->post('depdrop_parents')) {
-            $id0 = Yii::$app->request->post('depdrop_parents');
-            $id = end($id0);
-            $kecamatan = RefKecamatan::findOne(['id' => $id]);
-            if ($kecamatan) {
-                $list = RefKelurahan::find()->where('kecamatan_id=:id', [':id' => $kecamatan->id])->orderBy('name')->all();
-                $list = ArrayHelper::map($list, 'id', 'name');
-                $selected  = null;
-                if ($id != null && count($list) > 0) {
-                    $selected = '';
-                    foreach ($list as $i => $data) {
-                        $out[] = ['id' => $i, 'name' => $data];
-                    }
-                    if ($i == 0) {
-                        $selected = $i;
-                    }
-                    return ['output' => $out, 'selected' => $selected];
-                }
-            }
+        $parents = Yii::$app->request->post('depdrop_parents', []);
+        $id = is_array($parents) ? end($parents) : null;
+        if (!is_scalar($id) || $id === '') {
+            return ['output' => $out, 'selected' => ''];
         }
-        return ['output' => '', 'selected' => ''];
+
+        $kecamatan = RefKecamatan::findOne(['id' => $id]);
+        if ($kecamatan === null) {
+            return ['output' => $out, 'selected' => ''];
+        }
+
+        $kelurahanList = RefKelurahan::find()
+            ->select(['id', 'name'])
+            ->where(['ref_kecamatan_id' => $kecamatan->id])
+            ->orderBy(['name' => SORT_ASC])
+            ->asArray()
+            ->all();
+
+        foreach ($kelurahanList as $kelurahan) {
+            $out[] = ['id' => $kelurahan['id'], 'name' => $kelurahan['name']];
+        }
+
+        return ['output' => $out, 'selected' => ''];
     }
 }

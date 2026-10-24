@@ -12,6 +12,7 @@ $formatter->nullDisplay = '';
 if (!($task instanceof MonitoringTask)) {
 	$task = new MonitoringTask();
 }
+$rupSource = $task->rupSource;
 if (!isset($renderpdf)) {
 	$renderpdf = null;
 }
@@ -207,7 +208,7 @@ if (!isset($jenis)) {
 			}
 			?>
 			<?= $title ?>
-			<br><?php echo strtoupper($task->rup->namasatker); ?>
+			<br><?php echo strtoupper($rupSource->namasatker ?? $task->unit_name ?? ''); ?>
 		</h3>
 
 		<table width="100%" border="1" style="border-collapse: collapse;">
@@ -241,7 +242,12 @@ if (!isset($jenis)) {
 						<tr>
 							<td valign="top">Sumber Dana</td>
 							<td valign="top">:</td>
-							<td valign="top"><?= Html::encode(isset($task->rup->sumberdana) ? $task->rup->sumberdana : '-'); ?></td>
+							<td valign="top"><?php
+								$sourceOfFunds = isset($rupSource->sumberdana)
+									? $rupSource->sumberdana
+									: (isset($rupSource->sourceOfFunds->name) ? $rupSource->sourceOfFunds->name : '-');
+								echo Html::encode($sourceOfFunds);
+							?></td>
 						</tr>
 						<tr>
 							<td valign="top">Pagu Anggaran</td>
@@ -251,12 +257,12 @@ if (!isset($jenis)) {
 						<tr>
 							<td valign="top">Metode Pemilihan Penyedia</td>
 							<td valign="top">:</td>
-							<td valign="top"><?= Html::encode(isset($task->rup->metodepengadaan) ? $task->rup->metodepengadaan : '-'); ?></td>
+							<td valign="top"><?= Html::encode($rupSource->metodepengadaan ?? '-'); ?></td>
 						</tr>
 						<tr>
 							<td valign="top">Jenis Pengadaan</td>
 							<td valign="top">:</td>
-							<td valign="top"><?= Html::encode(isset($task->rup->jenispengadaan) ? $task->rup->jenispengadaan : '-'); ?></td>
+							<td valign="top"><?= Html::encode($rupSource->jenispengadaan ?? '-'); ?></td>
 						</tr>
 						<tr>
 							<td valign="top">Tgl Pemilihan Awal</td>

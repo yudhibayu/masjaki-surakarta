@@ -82,20 +82,13 @@ class PbjController extends Controller
     {
         parent::init();
         $this->sess = Yii::$app->session;
-        //monggo
-        if (isset($this->sess['tahun'])) {
-            $this->year = $this->sess['tahun'];
-        } else if (isset($this->sess['year'])) {
-            if (is_array($this->sess['year']) && isset($this->sess['year']['name'])) {
-                $this->year = $this->sess['year'];
-            } else {
-                $this->year = $this->sess['year'];
-            }
-        } else if (isset($this->sess['fiscal_year'])) {
-            $this->year = $this->sess['fiscal_year'];
-        } else {
-            $this->year = (int)date('Y');
+        $sessionYear = $this->sess['tahun'] ?? $this->sess['year'] ?? $this->sess['fiscal_year'] ?? (int)date('Y');
+        if (is_array($sessionYear)) {
+            $sessionYear = $sessionYear['name'] ?? null;
         }
+        $this->year = is_scalar($sessionYear) && $sessionYear !== ''
+            ? (int)$sessionYear
+            : (int)date('Y');
     }
 
     /**
@@ -379,32 +372,35 @@ class PbjController extends Controller
     public function actionDepdropBySatker()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = [];
-
-        if (Yii::$app->request->post('depdrop_parents')) {
-            $id0 = Yii::$app->request->post('depdrop_parents');
-            $idsatker = $id0[0];
-            $jenispengadaan = $id0[1];
-            $satker = Satker::findOne(['id' => $idsatker]);
-            if ($satker) {
-                $list = Pbj::find()->where('kodesatker=:id', [':id' => $satker->code])->andWhere('jenispengadaan=:jenispeng', [':jenispeng' => $jenispengadaan])->andWhere(['fiscal_year' => $this->year])->orderBy('name')->all();
-                $list = ArrayHelper::map($list, 'kodelelang', 'namecode');
-                $selected = null;
-                if ($idsatker != null && count($list) > 0) {
-                    $selected = '';
-                    foreach ($list as $i => $data) {
-                        $out[] = ['id' => $i, 'name' => $data];
-                    }
-                    if ($i == 0) {
-                        $selected = $i;
-                    }
-
-
-                    return ['output' => $out, 'selected' => $selected];
-                }
-            }
+        $parents = Yii::$app->request->post('depdrop_parents', []);
+        if (!is_array($parents) || count($parents) < 2
+            || !is_scalar($parents[0]) || !is_scalar($parents[1])
+            || !ctype_digit((string)$parents[0]) || trim((string)$parents[1]) === '') {
+            return ['output' => [], 'selected' => ''];
         }
-        return ['output' => '', 'selected' => ''];
+
+        $satker = Satker::findOne(['id' => (int)$parents[0]]);
+        if ($satker === null) {
+            return ['output' => [], 'selected' => ''];
+        }
+
+        $list = Pbj::find()
+            ->where(['fiscal_year' => $this->year])
+            ->andWhere(['jenispengadaan' => trim((string)$parents[1])])
+            ->andWhere([
+                'or',
+                ['kodesatker' => $satker->code],
+                ['namasatker' => $satker->getSirupNameVariants()],
+            ])
+            ->orderBy(['name' => SORT_ASC])
+            ->all();
+
+        $out = [];
+        foreach ($list as $pbj) {
+            $out[] = ['id' => (string)$pbj->kodelelang, 'name' => $pbj->namecode];
+        }
+
+        return ['output' => $out, 'selected' => ''];
     }
 
     /**

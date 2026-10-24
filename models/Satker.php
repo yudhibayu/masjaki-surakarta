@@ -238,6 +238,35 @@ class Satker extends \yii\db\ActiveRecord
         return true;
     }
 
+    public function getSirupNameVariants()
+    {
+        $name = strtoupper(preg_replace('/\\s+/u', ' ', trim($this->name)));
+        $names = [$name];
+
+        if (preg_match('/\\s+KOTA\\s+SURAKARTA$/u', $name)) {
+            $names[] = preg_replace('/\\s+KOTA\\s+SURAKARTA$/u', '', $name);
+        } elseif (preg_match('/\\s+SURAKARTA$/u', $name)) {
+            $names[] = preg_replace('/\\s+SURAKARTA$/u', ' KOTA SURAKARTA', $name);
+        }
+
+        $sirupAliases = [
+            'BADAN PENGELOLA KEUANGAN DAN ASET DAERAH' => ['BADAN PENGELOLAAN KEUANGAN DAN ASET DAERAH'],
+            'DINAS PEMBERDAYAAN PEREMPUAN DAN PERLINDUNGAN ANAK SERTA PENGENDALIAN PENDUDUK DAN KELUARGA BERENCANA' => [
+                'DINAS PEMBERDAYAAN PEREMPUAN DAN PELINDUNGAN ANAK SERTA PENGENDALIAN PENDUDUK DAN KELUARGA BERENCANA',
+            ],
+            'KELURAHAN PASARKLIWON' => ['KELURAHAN PASAR KLIWON'],
+            'RSUD BUNG KARNO KOTA SURAKARTA' => ['RSUD BUNG KARNO'],
+            'RSUD IBU FATMAWATI SOEKARNO KOTA SURAKARTA' => ['RSUD IBU FATMAWATI SOEKARNO'],
+            'UPTD PENGELOLAAN TPA SAMPAH' => ['UPTD PENGELOLAAN TEMPAT PEMROSESAN AKHIR SAMPAH'],
+            'UPTD RPH DAN PUSKESWAN' => ['UPTD RUMAH POTONG HEWAN DAN PUSAT KESEHATAN HEWAN'],
+        ];
+        foreach ($sirupAliases[$name] ?? [] as $alias) {
+            $names[] = $alias;
+        }
+
+        return array_values(array_unique($names));
+    }
+
     /**
      * Sebelum hapus
      *

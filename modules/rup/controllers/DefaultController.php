@@ -6,6 +6,7 @@ use app\models\Satker;
 use Yii;
 
 use app\modules\rup\models\Rup;
+use app\modules\rup\models\Pbj;
 use app\modules\rup\models\Rupjenispengadaan;
 use app\modules\rup\models\Rupmetodepengadaan;
 use app\modules\rup\models\RupSearch;
@@ -81,20 +82,13 @@ class DefaultController extends Controller
     {
         parent::init();
         $this->sess = Yii::$app->session;
-        //monggo
-        if (isset($this->sess['tahun'])) {
-            $this->year = $this->sess['tahun'];
-        } else if (isset($this->sess['year'])) {
-            if (is_array($this->sess['year']) && isset($this->sess['year']['name'])) {
-                $this->year = $this->sess['year'];
-            } else {
-                $this->year = $this->sess['year'];
-            }
-        } else if (isset($this->sess['fiscal_year'])) {
-            $this->year = $this->sess['fiscal_year'];
-        } else {
-            $this->year = (int)date('Y');
+        $sessionYear = $this->sess['tahun'] ?? $this->sess['year'] ?? $this->sess['fiscal_year'] ?? (int)date('Y');
+        if (is_array($sessionYear)) {
+            $sessionYear = $sessionYear['name'] ?? null;
         }
+        $this->year = is_scalar($sessionYear) && $sessionYear !== ''
+            ? $sessionYear
+            : (int)date('Y');
     }
 
     /**
@@ -268,33 +262,63 @@ class DefaultController extends Controller
     public function actionDepdropBySatker()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = [];
+        $parents = Yii::$app->request->post('depdrop_parents', []);
+        if (!is_array($parents) || count($parents) < 2
+            || !is_scalar($parents[0]) || !is_scalar($parents[1])
+            || !ctype_digit((string)$parents[0]) || !ctype_digit((string)$parents[1])) {
+            return ['output' => [], 'selected' => ''];
+        }
 
-        if (Yii::$app->request->post('depdrop_parents')) {
-            $id0 = Yii::$app->request->post('depdrop_parents');
-            // var_dump($id0);exit;
-            $idsatker = $id0[0];
-            $idjenispengadaanrup = $id0[1];
-            $satker = Satker::findOne(['id' => $idsatker]);
-            if ($satker) {
-                $list = Rup::find()->where('kodesatker=:id', [':id' => $satker->code])->andWhere('idjenispengadaan=:idjenis', [':idjenis' => $idjenispengadaanrup])->andWhere(['tahunanggaran' => $this->year])->orderBy('namapaket')->all();
-                $list = ArrayHelper::map($list, 'idrup', 'namecodeannounced');
-                $selected  = null;
-                if ($idsatker != null && count($list) > 0) {
-                    $selected = '';
-                    foreach ($list as $i => $data) {
-                        $out[] = ['id' => $i, 'name' => $data];
-                    }
-                    if ($i == 0) {
-                        $selected = $i;
-                    }
+        $satker = Satker::findOne(['id' => (int)$parents[0]]);
+        $idJenisPengadaan = (int)$parents[1];
+        if ($satker === null) {
+            return ['output' => [], 'selected' => ''];
+        }
 
+        // Data RUP lama memakai kode Satker lokal, sedangkan hasil SIRUP baru
+        // menyimpan ID Satker dan nama Satker SIRUP pada tabel PBJ.
+        $options = [];
+        $sortNames = [];
+        $rupList = Rup::find()
+            ->where(['kodesatker' => $satker->code])
+            ->andWhere(['idjenispengadaan' => $idJenisPengadaan])
+            ->andWhere(['tahunanggaran' => $this->year])
+            ->orderBy(['namapaket' => SORT_ASC])
+            ->all();
+        foreach ($rupList as $rup) {
+            $options[(string)$rup->idrup] = $rup->namecodeannounced;
+            $sortNames[(string)$rup->idrup] = $rup->namapaket;
+        }
 
-                    return ['output' => $out, 'selected' => $selected];
-                }
+        $sirupSatkerNames = $satker->getSirupNameVariants();
+        $pbjList = Pbj::find()
+            ->where(['fiscal_year' => $this->year])
+            ->andWhere(['idjenispengadaan' => $idJenisPengadaan])
+            ->andWhere([
+                'or',
+                ['kodesatker' => $satker->code],
+                ['namasatker' => array_values(array_unique($sirupSatkerNames))],
+            ])
+            ->orderBy(['name' => SORT_ASC])
+            ->all();
+        foreach ($pbjList as $pbj) {
+            $rupCode = $pbj->rup_code ?: $pbj->kodelelang;
+            if ($rupCode && !isset($options[(string)$rupCode])) {
+                $options[(string)$rupCode] = '(' . $rupCode . ') ' . $pbj->name;
+                $sortNames[(string)$rupCode] = $pbj->name;
             }
         }
-        return ['output' => '', 'selected' => ''];
+
+        uksort($options, static function ($left, $right) use ($sortNames) {
+            $byName = strnatcasecmp($sortNames[$left] ?? (string)$left, $sortNames[$right] ?? (string)$right);
+            return $byName !== 0 ? $byName : strnatcasecmp((string)$left, (string)$right);
+        });
+        $out = [];
+        foreach ($options as $id => $name) {
+            $out[] = ['id' => $id, 'name' => $name];
+        }
+
+        return ['output' => $out, 'selected' => ''];
     }
 
     public function actionSync()

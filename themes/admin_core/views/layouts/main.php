@@ -372,6 +372,14 @@ $user = Yii::$app->user->identity;
                                     <span class="menu-title">Pembinaan BUJK dan Masyarakat</span>
                                 </a>
                             </li>
+                            <?php if (Yii::$app->user->can('Administrator') || Yii::$app->user->can('Super Administrator')): ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/monitoring/tertib">
+                                        <i class="menu-icon bx bx-clipboard"></i>
+                                        <span class="menu-title">Pengawasan Tertib</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="/report/report">
                                     <i class="menu-icon bx bx-file"></i>

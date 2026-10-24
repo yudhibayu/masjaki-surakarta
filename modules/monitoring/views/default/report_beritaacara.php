@@ -6,6 +6,7 @@ use yii\i18n\Formatter;
 
 $formatter = isset(Yii::$app->formatter) ? Yii::$app->formatter : new Formatter();
 $formatter->nullDisplay = '-';
+$rupSource = isset($task) && $task instanceof MonitoringTask ? $task->rupSource : null;
 
 if (!isset($renderpdf)) {
 	$renderpdf = null;
@@ -122,7 +123,12 @@ if (!isset($renderpdf)) {
 			<tr>
 				<td valign="top">4. Sumber Anggaran</td>
 				<td valign="top">:</td>
-				<td valign="top"><?= isset($task->rup->sumberdana) ? Html::encode($task->rup->sumberdana) : ''; ?></td>
+				<td valign="top"><?php
+					$sourceOfFunds = isset($rupSource->sumberdana)
+						? $rupSource->sumberdana
+						: (isset($rupSource->sourceOfFunds->name) ? $rupSource->sourceOfFunds->name : '');
+					echo Html::encode($sourceOfFunds);
+				?></td>
 			</tr>
 			<!-- <tr>
 					<td valign="top" style="padding-left: 3%;">a. APBN/DAK/DID</td>
@@ -145,7 +151,7 @@ if (!isset($renderpdf)) {
 			<tr>
 				<td valign="top">5. Metode Pengadaan</td>
 				<td valign="top">:</td>
-				<td valign="top"><?= Html::encode($task->rup->metodepengadaan); ?></td>
+				<td valign="top"><?= Html::encode($rupSource->metodepengadaan ?? ''); ?></td>
 			</tr>
 			<tr>
 				<td valign="top">6. Data Kontrak</td>
