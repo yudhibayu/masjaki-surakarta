@@ -87,6 +87,16 @@ body {
   /* font-family: var(--default-font); */
 }
 
+body.index-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body.index-page > #footer {
+  margin-top: auto;
+}
+
 a {
   color: var(--accent-color);
   text-decoration: none;
@@ -250,6 +260,10 @@ h6 {
   z-index: 997;
 }
 
+.header > .header-container {
+  justify-content: flex-start;
+}
+
 .header .logo {
   line-height: 1;
 }
@@ -290,7 +304,11 @@ h6 {
   background: color-mix(in srgb, var(--accent-color), transparent 15%);
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1399px) {
+  .header > .header-container {
+    justify-content: space-between;
+  }
+
   .header .logo {
     order: 1;
   }
@@ -314,10 +332,25 @@ h6 {
 # Navigation Menu
 --------------------------------------------------------------*/
 /* Desktop Navigation */
-@media (min-width: 1200px) {
+@media (min-width: 1400px) {
+  .header > .header-container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
   .header-buttons {
     display: inline-flex;
-    margin-left: 30px;
+    margin-left: 12px;
+  }
+
+  .header-buttons .btn {
+    padding: 4px 10px;
+  }
+
+  .header-buttons .me-3 {
+    margin-right: 8px !important;
   }
 
   .navmenu {
@@ -338,7 +371,7 @@ h6 {
 
   .navmenu>ul>li {
     white-space: nowrap;
-    padding: 15px 14px;
+    padding: 15px 4px;
   }
 
   .hidden {
@@ -456,11 +489,13 @@ h6 {
 }
 
 /* Mobile Navigation */
-@media (max-width: 1199px) {
+@media (max-width: 767px) {
   .header .logo h1 {
     display: none;
   }
+}
 
+@media (max-width: 1399px) {
   .header-buttons {
     display: none;
   }
@@ -598,6 +633,92 @@ h6 {
   font-size: 14px;
   padding: 40px 0;
   position: relative;
+}
+
+.footer .footer-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 20px;
+}
+
+.footer .footer-logos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.footer .footer-logos-left {
+  justify-self: start;
+}
+
+.footer .footer-logos-right {
+  justify-self: end;
+}
+
+.footer .footer-logo-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.footer .footer-logo-pemkot {
+  width: 48px;
+}
+
+.footer .footer-logo-dpupr {
+  width: 114px;
+}
+
+.footer .footer-logo-berakhlak {
+  width: 148px;
+}
+
+.footer .footer-logo-bangga {
+  width: 142px;
+}
+
+.footer .footer-logo-badge img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.footer .footer-copy {
+  line-height: 1.6;
+  justify-self: center;
+  text-align: center;
+}
+
+.footer .footer-copy p {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+@media (max-width: 991px) {
+  .footer .footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer .footer-logos {
+    justify-content: center;
+  }
+
+  .footer .footer-copy {
+    order: 3;
+  }
+
+  .footer .footer-logos-right {
+    order: 2;
+  }
 }
 
 .footer .icon {

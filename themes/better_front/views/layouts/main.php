@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 use app\assets\BoxiconsAsset;
 use app\components\MenuFront;
 use app\assets\AdminCoreAsset;
+use app\assets\FooterLogosAsset;
 use yii\bootstrap5\Breadcrumbs;
 use app\assets\BetterFrontAsset;
 use app\modules\references\References;
@@ -18,6 +19,7 @@ use app\modules\app_setting\models\App_setting;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Content;
 
 BetterFrontAsset::register($this);
+$footerLogosAsset = FooterLogosAsset::register($this);
 // AdminCoreAsset::register($this);
 BoxiconsAsset::register($this);
 ?>
@@ -50,11 +52,11 @@ $menuItems = MenuFront::setMenu('better_front');
 <body class="index-page">
   <!-- <div class="container"> -->
   <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container position-relative d-flex align-items-center justify-content-between">
+    <div class="container position-relative d-flex align-items-center header-container">
 
-      <a href="/" class="logo d-flex align-items-center" style="margin-right: 30px">
+      <a href="/" class="logo d-flex align-items-center" style="margin-right: 12px">
         <img src="/images/logo-ska.png" alt="">
-        <h1 class="sitename" style="color: var(--bs-primary);">Masjaki Pekerja</h1>
+        <h1 class="sitename" style="color: var(--bs-primary);">Masjaki Surakarta</h1>
 
       </a>
 
@@ -64,10 +66,9 @@ $menuItems = MenuFront::setMenu('better_front');
           <li><a href="/pbj"><?= Yii::t('rup', 'Construction Work') ?></a></li>
           <li><a href="/peraturan-jasa-konstruksi">Peraturan Jasa Konstruksi</a></li>
           <li><a href="/rekap-sertifikasi-tkk">Rekap Sertifikasi TKK</a></li>
-          <li><a href="/rekap-pembinaan">Rekap Pembinaan BUJK dan Masyarakat</a></li>
-          <li><a href="/rekap-pengawasan-tertib">Rekap Pengawasan Tertib</a></li>
+          <li><a href="/rekap-pembinaan">Rekap Pembinaan</a></li>
+          <li><a href="/rekap-pengawasan-tertib">Rekap Pengawasan</a></li>
           <li><a href="/cons-market"><?= Yii::t('app', 'Construction Market') ?></a></li>
-          <li><a href="/badan-usaha"><?= Yii::t('app', 'Business Entity') ?></a></li>
           <li><a href="/berita"><?= Yii::t('app', 'News') ?></a></li>
           <!-- untuk kebutuhan mobile view -->
           <?php if (Yii::$app->user->isGuest) : ?>
@@ -80,7 +81,7 @@ $menuItems = MenuFront::setMenu('better_front');
           <?php endif; ?>
           <!-- -->
         </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        <i class="mobile-nav-toggle d-xxl-none bi bi-list"></i>
       </nav>
       <?php if (Yii::$app->user->isGuest) : ?>
         <div class="header-buttons">
@@ -114,7 +115,15 @@ $menuItems = MenuFront::setMenu('better_front');
   <?= $content ?>
 
   <footer id="footer" class="footer dark-background">
-    <div class="container text-center">
+    <div class="container footer-content">
+      <div class="footer-logos footer-logos-left">
+        <span class="footer-logo-badge footer-logo-pemkot">
+          <img src="<?= Html::encode($footerLogosAsset->baseUrl . '/logo-pemkot-footer.png') ?>" alt="Lambang Pemerintah Kota Surakarta">
+        </span>
+        <span class="footer-logo-badge footer-logo-dpupr">
+          <img src="<?= Html::encode($footerLogosAsset->baseUrl . '/logo-dpupr-footer.png') ?>" alt="Logo Dinas Pekerjaan Umum dan Penataan Ruang Kota Surakarta">
+        </span>
+      </div>
       <?php
       $key = "hitcountthismonth";
       $cache = Yii::$app->cache;
@@ -125,12 +134,20 @@ $menuItems = MenuFront::setMenu('better_front');
           ->count();
       }, 3600);
       ?>
-      <div class="">
+      <div class="footer-copy">
         &copy; Copyright <script>
           document.write(new Date().getFullYear() + ' ');
         </script> version <?= Yii::$app->params['version'] ?>. All Rights Reserved.
-        <p style="font-size:12px;" class="">Pengunjung Bulan Ini : <?= $hitsPerMonth ?> orang
+        <p>Pengunjung Bulan Ini : <?= $hitsPerMonth ?> orang
         </p>
+      </div>
+      <div class="footer-logos footer-logos-right">
+        <span class="footer-logo-badge footer-logo-berakhlak">
+          <img src="<?= Html::encode($footerLogosAsset->baseUrl . '/logo-berakhlak-footer.png') ?>" alt="Logo nilai dasar ASN BerAKHLAK">
+        </span>
+        <span class="footer-logo-badge footer-logo-bangga">
+          <img src="<?= Html::encode($footerLogosAsset->baseUrl . '/logo-bangga-footer.png') ?>" alt="Logo Bangga Melayani Bangsa">
+        </span>
       </div>
     </div>
   </footer>
