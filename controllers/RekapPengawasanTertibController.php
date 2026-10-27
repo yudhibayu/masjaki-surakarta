@@ -20,8 +20,10 @@ class RekapPengawasanTertibController extends Controller
     {
         $years = TertibPublikRekap::years();
         $requestedYear = Yii::$app->request->get('tahun');
-        if ($requestedYear === null || $requestedYear === '') {
+        if ($requestedYear === null) {
             $year = (int) (reset($years) ?: date('Y'));
+        } elseif ($requestedYear === '') {
+            $year = null;
         } elseif (is_scalar($requestedYear) && preg_match('/\A\d{4}\z/', (string) $requestedYear)) {
             $year = (int) $requestedYear;
         } else {
@@ -29,10 +31,11 @@ class RekapPengawasanTertibController extends Controller
         }
 
         $yearOptions = array_combine($years, $years) ?: [];
-        if (!isset($yearOptions[$year])) {
+        if ($year !== null && !isset($yearOptions[$year])) {
             $yearOptions[$year] = $year;
             krsort($yearOptions);
         }
+        $yearOptions = ['' => 'Semua tahun'] + $yearOptions;
 
         return $this->render('index', [
             'selectedYear' => $year,

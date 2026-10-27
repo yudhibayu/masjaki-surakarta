@@ -2,7 +2,7 @@
 
 return [
     'name'               => 'MASJAKI',
-    'version'            => '2.0.1',
+    'version'            => '2.0.0',
     'subtitle'           => '',
     'slogan'             => 'Jer Basuki Mowo Beyo',
     'logo_web'           => 'logo-infinindotech.png',
