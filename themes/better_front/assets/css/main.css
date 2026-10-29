@@ -27,48 +27,50 @@
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
 :root {
-  --background-color: #ffffff;
+  --background-color: #F3F6F3;
   /* Background color for the entire website, including individual sections */
-  --default-color: #212529;
+  --default-color: #30343A;
   /* Default color used for the majority of the text content across the entire website */
-  --heading-color: #37373f;
+  --heading-color: #263A32;
   /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #ce1212;
+  --accent-color: #A92D27;
   /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
   --surface-color: #ffffff;
   /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
   --contrast-color: #ffffff;
   /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
-  --bs-primary: #98211B;
+  --bs-primary: #A92D27;
+  --brand-green: #176B52;
+  --brand-gold: #D5A33A;
 }
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
-  --nav-color: #7f7f90;
-  /* --nav-hover-color: #ce1212; */
+  --nav-color: #66716D;
+  /* --nav-hover-color: var(--bs-primary); */
   --nav-hover-color: var(--bs-primary);
   --nav-mobile-background-color: #ffffff;
   /* Used as the background color for mobile navigation menu */
   --nav-dropdown-background-color: #ffffff;
   /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
-  --nav-dropdown-color: #7f7f90;
+  --nav-dropdown-color: #66716D;
   /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #ce1212;
+  --nav-dropdown-hover-color: var(--bs-primary);
   /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
 
 .light-background {
-  --background-color: #F2F2F2;
+  --background-color: #F3F6F3;
   --surface-color: #ffffff;
 }
 
 .dark-background {
-  --background-color: #1f1f24;
+  --background-color: #174B3D;
   --default-color: #ffffff;
   --heading-color: #ffffff;
-  --surface-color: #37373f;
+  --surface-color: #21634C;
   --contrast-color: #ffffff;
 }
 
@@ -85,6 +87,16 @@ body {
   background-color: var(--background-color);
   font-family: "Poppins", sans-serif;
   /* font-family: var(--default-font); */
+}
+
+body.index-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body.index-page > #footer {
+  margin-top: auto;
 }
 
 a {
@@ -244,10 +256,14 @@ h6 {
 --------------------------------------------------------------*/
 .header {
   color: var(--default-color);
-  background-color: var(--background-color);
+  background-color: #E7F2E8;
   padding: 20px 0;
   transition: all 0.5s;
   z-index: 997;
+}
+
+.header > .header-container {
+  justify-content: flex-start;
 }
 
 .header .logo {
@@ -290,7 +306,11 @@ h6 {
   background: color-mix(in srgb, var(--accent-color), transparent 15%);
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1399px) {
+  .header > .header-container {
+    justify-content: space-between;
+  }
+
   .header .logo {
     order: 1;
   }
@@ -314,10 +334,26 @@ h6 {
 # Navigation Menu
 --------------------------------------------------------------*/
 /* Desktop Navigation */
-@media (min-width: 1200px) {
+@media (min-width: 1400px) {
+  .header > .header-container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
   .header-buttons {
     display: inline-flex;
-    margin-left: 30px;
+    margin-left: auto;
+    flex: 0 0 auto;
+  }
+
+  .header-buttons .btn {
+    padding: 4px 10px;
+  }
+
+  .header-buttons .me-3 {
+    margin-right: 8px !important;
   }
 
   .navmenu {
@@ -338,7 +374,7 @@ h6 {
 
   .navmenu>ul>li {
     white-space: nowrap;
-    padding: 15px 14px;
+    padding: 15px 4px;
   }
 
   .hidden {
@@ -456,11 +492,21 @@ h6 {
 }
 
 /* Mobile Navigation */
-@media (max-width: 1199px) {
+@media (max-width: 767px) {
   .header .logo h1 {
-    display: none;
+    display: block;
+    font-size: 20px;
+    line-height: 1.1;
   }
+}
 
+@media (max-width: 380px) {
+  .header .logo h1 {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1399px) {
   .header-buttons {
     display: none;
   }
@@ -593,11 +639,100 @@ h6 {
 --------------------------------------------------------------*/
 .footer {
   --heading-font: var(--default-font);
+  --background-color: #E7F2E8;
+  --default-color: #30343A;
+  --heading-color: #263A32;
   color: var(--default-color);
   background-color: var(--background-color);
   font-size: 14px;
   padding: 40px 0;
   position: relative;
+}
+
+.footer .footer-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 20px;
+}
+
+.footer .footer-logos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.footer .footer-logos-left {
+  justify-self: start;
+}
+
+.footer .footer-logos-right {
+  justify-self: end;
+}
+
+.footer .footer-logo-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.footer .footer-logo-pemkot {
+  width: 48px;
+}
+
+.footer .footer-logo-dpupr {
+  width: 114px;
+}
+
+.footer .footer-logo-berakhlak {
+  width: 148px;
+}
+
+.footer .footer-logo-bangga {
+  width: 142px;
+}
+
+.footer .footer-logo-badge img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.footer .footer-copy {
+  line-height: 1.6;
+  justify-self: center;
+  text-align: center;
+}
+
+.footer .footer-copy p {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+@media (max-width: 991px) {
+  .footer .footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer .footer-logos {
+    justify-content: center;
+  }
+
+  .footer .footer-copy {
+    order: 3;
+  }
+
+  .footer .footer-logos-right {
+    order: 2;
+  }
 }
 
 .footer .icon {
@@ -1692,30 +1827,30 @@ section,
 --------------------------------------------------------------*/
 
 .card {
-  background-color: #fff;
-  border: 1px solid #e3e6f0;
+  background-color: var(--surface-color);
+  border: 1px solid #DCE8E0;
   border-radius: 12px;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
 .card-header {
-  background-color: #f8f9fc;
-  border-bottom: 1px solid #e3e6f0;
+  background-color: color-mix(in srgb, var(--brand-green) 8%, #ffffff);
+  border-bottom: 1px solid #DCE8E0;
 }
 
 .breadcrumb {
-  background-color: #f8f9fc;
+  background-color: color-mix(in srgb, var(--brand-green) 6%, #ffffff);
   border-radius: 12px;
 }
 
 .breadcrumb-item.active {
-  color: #6c757d;
+  color: #5D6964;
 }
 
 .table {
   margin: 0;
   font-size: 14px;
-  color: #5a5c69;
+  color: #46524D;
 }
 
 /* .table th {
@@ -1724,7 +1859,7 @@ section,
 } */
 
 .table thead th {
-  color: #5a5c69;
+  color: #365047;
 }
 
 .table tbody tr {
@@ -1734,17 +1869,17 @@ section,
 }
 
 .table-hover tbody tr:hover {
-  background-color: #f1f3f5;
+  background-color: #F3F6F3;
 }
 
 .btn-primary {
-  background-color: #4e73df;
-  border-color: #4e73df;
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
 }
 
 .btn-primary:hover {
-  background-color: #2e59d9;
-  border-color: #2653d4;
+  background-color: #8F251F;
+  border-color: #8F251F;
 }
 
 .job-card {
@@ -1768,9 +1903,8 @@ section,
   left: 0;
   width: 100%;
   height: 4px;
-  background: #98211B;
-  /* background: linear-gradient(90deg, #98211B, #F49232); */
-  border-bottom: 1px solid #98211B;
+  background: var(--bs-primary);
+  border-bottom: 1px solid var(--bs-primary);
 }
 
 .job-card:hover {
@@ -1785,7 +1919,7 @@ section,
 .card-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #98211B;
+  color: var(--bs-primary);
   margin-bottom: 0.75rem;
 }
 
@@ -1814,7 +1948,7 @@ section,
 
 .label {
   font-weight: 600;
-  color: #98211B;
+  color: var(--bs-primary);
 }
 
 .value {
@@ -1822,7 +1956,7 @@ section,
 }
 
 .custom-btn {
-  background-color: #98211B;
+  background-color: var(--bs-primary);
   border: none;
   border-radius: 25px;
   padding: 12px 24px;
@@ -1838,7 +1972,7 @@ section,
 }
 
 .custom-btn:hover {
-  background-color: #811a15;
+  background-color: #8F251F;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   transform: scale(1.05);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -1892,4 +2026,88 @@ section,
 form div.required label.control-label:after {
   content: " * ";
   color: red;
+}
+
+/* Masjaki public color palette */
+body.index-page .btn-primary,
+body.index-page .btn-danger {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #8F251F;
+  --bs-btn-hover-border-color: #8F251F;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #8F251F;
+  --bs-btn-active-border-color: #8F251F;
+  --bs-btn-focus-shadow-rgb: 169, 45, 39;
+}
+
+body.index-page .btn-outline-primary,
+body.index-page .btn-outline-danger {
+  --bs-btn-color: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--bs-primary);
+  --bs-btn-hover-border-color: var(--bs-primary);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #8F251F;
+  --bs-btn-active-border-color: #8F251F;
+  --bs-btn-focus-shadow-rgb: 169, 45, 39;
+}
+
+body.index-page .btn-success {
+  --bs-btn-bg: var(--brand-green);
+  --bs-btn-border-color: var(--brand-green);
+  --bs-btn-hover-bg: #105640;
+  --bs-btn-hover-border-color: #105640;
+  --bs-btn-active-bg: #105640;
+  --bs-btn-active-border-color: #105640;
+  --bs-btn-focus-shadow-rgb: 23, 107, 82;
+}
+
+body.index-page .btn-outline-success {
+  --bs-btn-color: var(--brand-green);
+  --bs-btn-border-color: var(--brand-green);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--brand-green);
+  --bs-btn-hover-border-color: var(--brand-green);
+  --bs-btn-active-bg: #105640;
+  --bs-btn-active-border-color: #105640;
+  --bs-btn-focus-shadow-rgb: 23, 107, 82;
+}
+
+body.index-page .text-primary {
+  color: var(--bs-primary) !important;
+}
+
+body.index-page .text-success {
+  color: var(--brand-green) !important;
+}
+
+body.index-page .bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+body.index-page .bg-success {
+  background-color: var(--brand-green) !important;
+}
+
+body.index-page .card-header {
+  border-bottom-color: color-mix(in srgb, var(--brand-gold) 45%, #DCE8E0);
+}
+
+body.index-page .table thead th {
+  background-color: color-mix(in srgb, var(--brand-green) 8%, #ffffff);
+}
+
+body.index-page .form-control:focus,
+body.index-page .form-select:focus {
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--brand-gold) 32%, transparent);
+}
+
+body.index-page :focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 2px;
 }

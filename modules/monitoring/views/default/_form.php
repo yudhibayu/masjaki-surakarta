@@ -61,6 +61,7 @@ LeafLetAsset::register($this);
                 'options' => [
                     'placeholder' => Yii::t('app', 'Choose'),
                     'id' => 'idrup_select',
+                    'required' => true,
                 ],
                 'type' => DepDrop::TYPE_SELECT2,
                 'select2Options' => ['pluginOptions' => ['allowClear' => false]],
@@ -70,7 +71,7 @@ LeafLetAsset::register($this);
                     'url' => Url::to(['/rup/default/depdrop-by-satker']),
                     'loadingText' => Yii::t('app', 'Loading...'),
                 ]
-            ]);
+            ])->hint('Pilihan RUP mengikuti Satuan Kerja, jenis pengadaan, dan tahun aktif. Data dapat berasal dari RUP atau paket SIRUP yang tersimpan di PBJ.');
             ?>
         </div>
     </div>
@@ -274,16 +275,26 @@ LeafLetAsset::register($this);
 
     <div class='row'>
         <div class='col-md-6'>
-            <?=
-            $form->field($model, 'team_id')->widget(Select2::class, [
-                'data' => $dropdown_data['teams'],
-                'language' => 'id',
-                'options' => ['placeholder' => Yii::t('app', 'Choose'), 'id' => 'teams_status_select'],
-                'pluginOptions' => [
-                    'allowClear' => false
-                ],
-            ]);
-            ?>
+            <div class="d-flex align-items-end gap-2">
+                <div class="flex-grow-1">
+                    <?= $form->field($model, 'team_id')->widget(Select2::class, [
+                        'data' => $dropdown_data['teams'],
+                        'language' => 'id',
+                        'options' => ['placeholder' => Yii::t('app', 'Choose'), 'id' => 'teams_status_select'],
+                        'pluginOptions' => [
+                            'allowClear' => false
+                        ],
+                    ]) ?>
+                </div>
+                <?php if (Yii::$app->user->can('Administrator') || Yii::$app->user->can('Team')): ?>
+                    <?= Html::a('Tambah Tim', ['/team/create'], [
+                        'class' => 'btn btn-outline-primary mb-3 text-nowrap',
+                        'target' => '_blank',
+                        'rel' => 'noopener',
+                        'data-pjax' => '0',
+                    ]) ?>
+                <?php endif; ?>
+            </div>
         </div>
         <!-- <div class='col-md-6'>
             <?= $form->field($model, 'supervisor_name')->textInput()->hiddenInput()->label(false) ?>
@@ -323,7 +334,7 @@ LeafLetAsset::register($this);
                         'data' => new JsExpression('function(params) { return {q:params.term}; }')
                     ],
                 ],
-            ]) ?>
+            ])->hint('Ketik minimal 3 karakter nama program untuk mencari.') ?>
             <?php // echo $form->field($model, 'program_name')->textInput() 
             ?>
         </div>
@@ -728,5 +739,41 @@ map.on("pm:create",function(e) {
 });
 
 EOT_JS_CODE
+);
+
+$teamOptionsUrl = json_encode(Url::to(['/monitoring/default/team-options']), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+$this->registerJs(<<<JS
+(function ($) {
+    var teamSelect = $('#teams_status_select');
+    if (!teamSelect.length) {
+        return;
+    }
+
+    var refreshTeamOptions = function () {
+        var selectedValue = teamSelect.val();
+
+        $.getJSON($teamOptionsUrl).done(function (teams) {
+            var availableTeams = {};
+            teamSelect.empty().append(new Option('', '', false, false));
+
+            $.each(teams, function (_, team) {
+                var teamId = String(team.id);
+                availableTeams[teamId] = true;
+                teamSelect.append(new Option(team.text, teamId, false, false));
+            });
+
+            if (selectedValue && availableTeams[String(selectedValue)]) {
+                teamSelect.val(String(selectedValue));
+            } else {
+                teamSelect.val('');
+            }
+
+            teamSelect.trigger('change');
+        });
+    };
+
+    $(window).on('focus pageshow', refreshTeamOptions);
+})(jQuery);
+JS
 );
 ?>

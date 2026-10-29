@@ -234,7 +234,8 @@ class MonitoringTask extends \yii\db\ActiveRecord
             [['budget', 'hps', 'bid_price', 'final_price', 'latest_plan_financial_budget', 'latest_plan_physical_percent', 'latest_monitored_financial_budget', 'latest_monitored_physical_percent', 'bpjstk_contrib_amount'], 'number'],
             [['start_date', 'end_date', 'finally_finished_date', 'provider_selection_start_date', 'provider_selection_end_date', 'contract_date', 'spmk_date', 'created_at', 'updated_at', 'bast_date'], 'safe'],
             [['unit_name', 'team_name', 'supervisor_name', 'ppkom_name', 'ppkom_nip', 'executor_name', 'object_type_name', 'contract_number', 'spmk_number', 'bpjstk_number', 'work_days', 'default_lat', 'default_lng', 'bast_no'], 'string', 'max' => 255],
-            [['idrup', 'budget', 'final_price', 'bid_price', 'hps', 'work_days', 'team_id', 'object_type_id', 'kecamatan_id'], 'required'],
+            [['idrup'], 'required', 'message' => 'RUP wajib dipilih.'],
+            [['budget', 'final_price', 'bid_price', 'hps', 'work_days', 'team_id', 'object_type_id', 'kecamatan_id'], 'required'],
             [['idrup'], 'validateAlreadyUsedId'],
             [['work_range_start', 'work_range_end'], 'number'],
             [['contractor_name', 'contract_date', 'contract_number', 'spmk_date', 'spmk_number'], 'required'],
@@ -376,6 +377,17 @@ class MonitoringTask extends \yii\db\ActiveRecord
     {
         //menggunakan user untuk placeholder sementara
         return $this->hasOne(Rup::class, ['idrup' => 'idrup']);
+    }
+
+    public function getSirupPbj()
+    {
+        return $this->hasOne(Pbj::class, ['rup_code' => 'idrup'])
+            ->andOnCondition(['fiscal_year' => $this->fiscal_year]);
+    }
+
+    public function getRupSource()
+    {
+        return $this->rup ?: $this->sirupPbj;
     }
 
     public function getPbj()

@@ -17,7 +17,13 @@ use yii\widgets\ListView;
             'options' => ['class' => 'table table-striped table-bordered', 'style' => 'font-size:13px'],
             'attributes' => [
                 'name:ntext',
-                'rup.namecode',
+                [
+                    'attribute' => 'idrup',
+                    'value' => function ($model) {
+                        $rupSource = $model->rupSource;
+                        return $rupSource ? $rupSource->namecode : $model->idrup;
+                    },
+                ],
                 'pbj.namecode',
                 // 'unit_id',
                 'unit_name',

@@ -30,6 +30,7 @@ use app\modules\references\models\RefKecamatan;
 use app\modules\references\models\RefTagging;
 use app\modules\rup\models\Pbj;
 use app\modules\rup\models\Rup;
+use app\modules\rup\models\Rupjenispengadaan;
 use app\modules\technicalspec\models\DedDataSearch;
 use app\modules\technicalspec\models\McoCco;
 use app\modules\technicalspec\models\McoCcoSearch;
@@ -114,20 +115,13 @@ class DefaultController extends Controller
     {
         parent::init();
         $this->sess = Yii::$app->session;
-        //monggo
-        if (isset($this->sess['tahun'])) {
-            $this->year = $this->sess['tahun'];
-        } else if (isset($this->sess['year'])) {
-            if (is_array($this->sess['year']) && isset($this->sess['year']['name'])) {
-                $this->year = $this->sess['year'];
-            } else {
-                $this->year = $this->sess['year'];
-            }
-        } else if (isset($this->sess['fiscal_year'])) {
-            $this->year = $this->sess['fiscal_year'];
-        } else {
-            $this->year = (int)date('Y');
+        $sessionYear = $this->sess['tahun'] ?? $this->sess['year'] ?? $this->sess['fiscal_year'] ?? (int)date('Y');
+        if (is_array($sessionYear)) {
+            $sessionYear = $sessionYear['name'] ?? null;
         }
+        $this->year = is_scalar($sessionYear) && $sessionYear !== ''
+            ? (int)$sessionYear
+            : (int)date('Y');
     }
 
     /**
@@ -148,11 +142,7 @@ class DefaultController extends Controller
         }
 
 
-        if (isset(Yii::$app->session['team']['team_id'])) {
-            $teams = Teamlist::find()->where(['id' => Yii::$app->session['team']['team_id']])->all();
-        } else {
-            $teams = Teamlist::find()->all();
-        }
+        $teams = $this->getSelectableTeams();
 
         $this->dropdown_data['unit_id'] = ArrayHelper::map($unit, 'id', 'namecode');
         $this->dropdown_data['teams'] = ArrayHelper::map($teams, 'id', 'name');
@@ -164,10 +154,39 @@ class DefaultController extends Controller
         $this->dropdown_data['criticalcondition'] = ArrayHelper::map($criticalcondition, 'id', 'name');
         // $this->dropdown_data['task_active'] = MonitoringTask::taskActiveStatusName();
         // $this->dropdown_data['bast_done'] = MonitoringTask::bastDoneStatusName();
-        $jenispengadaan = Rup::find()->select(['idjenispengadaan', 'jenispengadaan'])->distinct()->all();
-        $this->dropdown_data['idjenispengadaanrup'] = ArrayHelper::map($jenispengadaan, 'idjenispengadaan', 'jenispengadaan');
+        $jenispengadaan = Rupjenispengadaan::find()->orderBy(['name' => SORT_ASC])->all();
+        $this->dropdown_data['idjenispengadaanrup'] = ArrayHelper::map($jenispengadaan, 'id', 'name');
         $jenispengadaanpbj = Pbj::find()->select(['jenispengadaan'])->distinct()->all();
         $this->dropdown_data['idjenispengadaanpbj'] = ArrayHelper::map($jenispengadaanpbj, 'jenispengadaan', 'jenispengadaan');
+    }
+
+    private function getSelectableTeams()
+    {
+        $isTeamUser = Yii::$app->user->can('Team')
+            && !Yii::$app->user->can('Administrator')
+            && !Yii::$app->user->can('OPD');
+
+        $teamSession = Yii::$app->session->get('team', []);
+        $teamId = is_array($teamSession) ? ($teamSession['team_id'] ?? null) : null;
+
+        if ($isTeamUser && $teamId) {
+            $selectedTeam = Teamlist::find()->where(['id' => $teamId])->orderBy(['name' => SORT_ASC])->all();
+            if ($selectedTeam) {
+                return $selectedTeam;
+            }
+        }
+
+        return Teamlist::find()->orderBy(['name' => SORT_ASC])->all();
+    }
+
+    public function actionTeamOptions()
+    {
+        $options = [];
+        foreach ($this->getSelectableTeams() as $team) {
+            $options[] = ['id' => (string)$team->id, 'text' => $team->name];
+        }
+
+        return $this->asJson($options);
     }
 
     /**
@@ -657,6 +676,20 @@ class DefaultController extends Controller
                     $model->fiscal_year = $rup->tahunanggaran;
                     $model->ppkom_name = $rup->ppk;
                     $model->ppkom_nip = $rup->nip_ppk;
+                } else {
+                    $sirupPbj = Pbj::find()
+                        ->where(['fiscal_year' => $this->year])
+                        ->andWhere([
+                            'or',
+                            ['rup_code' => $model->idrup],
+                            ['kodelelang' => $model->idrup],
+                        ])
+                        ->one();
+                    if ($sirupPbj) {
+                        $model->name = $sirupPbj->name;
+                        $model->budget = $sirupPbj->budget;
+                        $model->fiscal_year = $sirupPbj->fiscal_year;
+                    }
                 }
             }
             if ($model->pbj_id != '') {

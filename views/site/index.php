@@ -15,14 +15,13 @@ $this->title = Yii::$app->name . ' - Beranda';
     <div class="container">
       <div class="row gy-4 justify-content-center justify-content-lg-between">
         <div class="col-lg-5 order-2 order-lg-1 d-flex flex-column justify-content-center">
-          <h1 data-aos="fade-up">MAS JAKI</h1>
+          <h1 data-aos="fade-up">MASJAKI</h1>
           <h1 data-aos="fade-up" style="color: var(--bs-primary);">Kota Surakarta</h1>
           <p data-aos="fade-up" data-aos-delay="100">
-            Manajemen Informasi Jasa Konstruksi Dan Pelaporan Kecelakaan Kerja. Bertujuan untuk memberi
-            layanan kepada masyarakat untuk memperoleh informasi pasar kerja konstruksi serta dapat memantau
-            kecelakaan kerja konstruksi.
+            Manajemen Informasi Jasa Konstruksi Kota Surakarta. Bertujuan untuk memberi layanan kepada
+            masyarakat untuk memperoleh informasi terkait penyelenggaraan jasa konstruksi di Kota Surakarta.
           </p>
-          <div class="d-flex gap-3 mt-3" data-aos="fade-up" data-aos-delay="200">
+          <div class="d-none" data-aos="fade-up" data-aos-delay="200">
             <a href="/lowongan" class="btn btn-outline-danger fw-bold">Lihat Lowongan Konstruksi</a>
             <a href="/pelatihan" class="btn btn-outline-danger fw-bold">Ikut Pelatihan</a>
           </div>
