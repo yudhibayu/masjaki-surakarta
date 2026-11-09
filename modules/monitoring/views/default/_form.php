@@ -39,6 +39,11 @@ LeafLetAsset::register($this);
                 ],
             ]);
             ?>
+            <?php if (empty($dropdown_data['unit_id'])): ?>
+                <div class="alert alert-warning py-2" role="alert">
+                    Satuan Kerja tidak tersedia untuk instansi dan tahun anggaran yang dipilih. Periksa pilihan tahun, data Master Satuan Kerja, atau penugasan Satker akun ini.
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
