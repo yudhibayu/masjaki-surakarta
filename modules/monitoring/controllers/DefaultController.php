@@ -133,13 +133,22 @@ class DefaultController extends Controller
     {
         $this->dropdown_data = array();
 
+        $milestone = $this->sess->get('milestone', []);
+        $refSotId = is_array($milestone) && isset($milestone['ref_sot_id'])
+            ? (int) $milestone['ref_sot_id']
+            : null;
 
-        //monggo
-        if (isset(Yii::$app->session['satker']['satker_id'])) {
-            $unit = Satker::find()->where(['ref_sot_id' => Yii::$app->session['milestone']['ref_sot_id'], 'id' => Yii::$app->session['satker']['satker_id']])->all();
+        $unitQuery = Satker::find();
+        if ($refSotId) {
+            $unitQuery->where(['ref_sot_id' => $refSotId]);
         } else {
-            $unit = Satker::find()->where(['ref_sot_id' => Yii::$app->session['milestone']['ref_sot_id']])->all();
+            // Do not expose Satker from every organization when year context is missing.
+            $unitQuery->andWhere('0=1');
         }
+        if (isset($this->sess['satker']['satker_id'])) {
+            $unitQuery->andWhere(['id' => (int) $this->sess['satker']['satker_id']]);
+        }
+        $unit = $unitQuery->orderBy(['name' => SORT_ASC])->all();
 
 
         $teams = $this->getSelectableTeams();
@@ -158,6 +167,17 @@ class DefaultController extends Controller
         $this->dropdown_data['idjenispengadaanrup'] = ArrayHelper::map($jenispengadaan, 'id', 'name');
         $jenispengadaanpbj = Pbj::find()->select(['jenispengadaan'])->distinct()->all();
         $this->dropdown_data['idjenispengadaanpbj'] = ArrayHelper::map($jenispengadaanpbj, 'jenispengadaan', 'jenispengadaan');
+    }
+
+    private function ensureMilestoneSelected()
+    {
+        $milestone = $this->sess->get('milestone', []);
+        if (is_array($milestone) && !empty($milestone['ref_sot_id'])) {
+            return null;
+        }
+
+        $this->sess->setFlash('warning', 'Pilih tahun anggaran terlebih dahulu agar daftar Satuan Kerja sesuai.');
+        return $this->redirect(['/admin/year']);
     }
 
     private function getSelectableTeams()
@@ -609,6 +629,10 @@ class DefaultController extends Controller
      */
     public function actionCreate()
     {
+        if (($response = $this->ensureMilestoneSelected()) !== null) {
+            return $response;
+        }
+
         $model = new MonitoringTask();
 
         $autofill = Yii::$app->request->post('autofill', '0');
@@ -721,6 +745,10 @@ class DefaultController extends Controller
      */
     public function actionUpdate($id)
     {
+        if (($response = $this->ensureMilestoneSelected()) !== null) {
+            return $response;
+        }
+
         $id = Yii::$app->hasher->decode($id);
 
         $model = $this->findModel($id);
