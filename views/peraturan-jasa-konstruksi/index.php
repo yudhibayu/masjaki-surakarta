@@ -10,10 +10,15 @@ $this->registerCss(<<<'CSS'
 .produk-hukum-public__inner { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
 .produk-hukum-public__filter { background: #fff; border-radius: 14px; padding: 14px 16px 12px; margin-bottom: 12px; }
 .produk-hukum-public__label { display: block; color: #38443e; font-size: .84rem; margin-bottom: 7px; }
-.produk-hukum-public__controls { display: flex; gap: 8px; align-items: stretch; }
-.produk-hukum-public__select { flex: 1; min-width: 0; min-height: 44px; background-color: #f3f6f4; border: 1px solid #d1dcd5; border-radius: 9px; color: #30343a; }
+.produk-hukum-public__controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }
+.produk-hukum-public__filter-field { flex: 1; min-width: 0; }
+.produk-hukum-public__select { width: 100%; min-width: 0; min-height: 44px; background-color: #f3f6f4; border: 1px solid #d1dcd5; border-radius: 9px; color: #30343a; }
 .produk-hukum-public__search { width: 44px; min-width: 44px; border: 0; border-radius: 9px; background: #46524d; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; }
 .produk-hukum-public__search:hover, .produk-hukum-public__search:focus { background: #303a35; color: #fff; }
+@media (max-width: 575.98px) {
+    .produk-hukum-public__filter-field { flex: 1 1 100%; }
+    .produk-hukum-public__search { margin-left: auto; }
+}
 .produk-hukum-public__report { background: #fff; border-radius: 14px; overflow: hidden; }
 .produk-hukum-public__report-title { padding: 2px 16px 6px; margin: 0; color: #30343a; font-size: 1rem; font-weight: 600; border-bottom: 1px solid #e3e7e4; }
 .produk-hukum-public__table-wrap { padding: 0 16px 12px; }
@@ -31,13 +36,23 @@ CSS);
         <h1 class="visually-hidden"><?= Html::encode($this->title) ?></h1>
 
         <?= Html::beginForm(['/peraturan-jasa-konstruksi/index'], 'get', ['class' => 'produk-hukum-public__filter']) ?>
-            <?= Html::label('Pilih tahun', 'tahun-produk-hukum', ['class' => 'produk-hukum-public__label']) ?>
             <div class="produk-hukum-public__controls">
-                <?= Html::dropDownList('tahun', $selectedYear, array_combine($years, $years) ?: [], [
-                    'id' => 'tahun-produk-hukum',
-                    'class' => 'form-select produk-hukum-public__select',
-                    'prompt' => 'Pilih tahun',
-                ]) ?>
+                <div class="produk-hukum-public__filter-field">
+                    <?= Html::label('Pilih tahun', 'tahun-produk-hukum', ['class' => 'produk-hukum-public__label']) ?>
+                    <?= Html::dropDownList('tahun', $selectedYear, array_combine($years, $years) ?: [], [
+                        'id' => 'tahun-produk-hukum',
+                        'class' => 'form-select produk-hukum-public__select',
+                        'prompt' => 'Pilih tahun',
+                    ]) ?>
+                </div>
+                <div class="produk-hukum-public__filter-field">
+                    <?= Html::label('Jenis Produk Hukum', 'jenis-produk-hukum', ['class' => 'produk-hukum-public__label']) ?>
+                    <?= Html::dropDownList('jenis_produk_hukum', $selectedJenisProdukHukum, $jenisProdukHukumOptions, [
+                        'id' => 'jenis-produk-hukum',
+                        'class' => 'form-select produk-hukum-public__select',
+                        'prompt' => 'Semua jenis produk hukum',
+                    ]) ?>
+                </div>
                 <button type="submit" class="produk-hukum-public__search" aria-label="Tampilkan dokumen" title="Tampilkan dokumen">
                     <i class="bi bi-search" aria-hidden="true"></i>
                 </button>
@@ -51,6 +66,7 @@ CSS);
                     <thead>
                         <tr>
                             <th scope="col">Nama Produk Hukum</th>
+                            <th scope="col">Jenis Produk Hukum</th>
                             <th scope="col">Dokumen</th>
                         </tr>
                     </thead>
@@ -58,6 +74,7 @@ CSS);
                         <?php foreach ($documents as $document): ?>
                             <tr>
                                 <th scope="row"><?= Html::encode($document->master->nama) ?></th>
+                                <td><?= Html::encode($document->jenis_produk_hukum ?: '—') ?></td>
                                 <td>
                                     <div class="produk-hukum-public__actions">
                                         <?php if ($document->mime_type === 'application/pdf'): ?>
@@ -75,7 +92,7 @@ CSS);
                             </tr>
                         <?php endforeach; ?>
                         <?php if (!$documents): ?>
-                            <tr><td colspan="2" class="text-center py-4 produk-hukum-public__empty">Tidak ada dokumen publik untuk tahun yang dipilih.</td></tr>
+                            <tr><td colspan="3" class="text-center py-4 produk-hukum-public__empty">Tidak ada dokumen publik untuk tahun yang dipilih.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

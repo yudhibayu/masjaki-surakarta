@@ -276,8 +276,9 @@ h6 {
 }
 
 .header .logo h1 {
-  white-space: nowrap;
+  white-space: normal;
   font-size: 30px;
+  line-height: 1.05;
   margin: 0;
   font-weight: 700;
   color: var(--heading-color);
@@ -977,6 +978,10 @@ section,
   padding: 100px 0;
   display: flex;
   align-items: center;
+  background-image: url('../img/hero-jakon-desktop.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .hero h1 {
@@ -1037,6 +1042,17 @@ section,
 
 .hero .animated {
   animation: up-down 2s ease-in-out infinite alternate-reverse both;
+}
+
+@media (max-width: 767px) {
+  .hero {
+    background-image: url('../img/hero-jakon-mobile.png');
+    background-position: center 210px;
+    background-size: 100% auto;
+    min-height: 80vh;
+    padding: 32px 0;
+    align-items: flex-start;
+  }
 }
 
 @media (max-width: 640px) {

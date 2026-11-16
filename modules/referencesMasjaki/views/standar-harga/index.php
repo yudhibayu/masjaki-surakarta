@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'tableOptions' => ['class' => 'table table-light table-striped table-bordered table-hover'],
                 'columns' => [
                     ['label' => 'Nama Produk Hukum', 'value' => function ($record) { return $record->master->nama; }],
+                    ['label' => 'Jenis Produk Hukum', 'value' => function ($record) { return $record->jenis_produk_hukum ?: '—'; }],
                     'tahun',
                     ['label' => 'Status', 'value' => function ($record) { return $record->is_public ? 'Publik' : 'Draft'; }],
                     ['label' => 'File', 'format' => 'raw', 'value' => function ($record) { return Html::a(Html::encode($record->nama_file), ['unduh', 'id' => $record->id]); }],

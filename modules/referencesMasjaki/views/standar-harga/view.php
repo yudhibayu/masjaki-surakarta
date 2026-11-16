@@ -11,6 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card-body">
         <p>Status: <strong><?= $record->is_public ? 'Publik' : 'Draft' ?></strong></p>
         <p>Master: <?= Html::encode($record->master->nama) ?><?= $record->master->is_active ? '' : ' (nonaktif)' ?></p>
+        <p>Jenis Produk Hukum: <?= Html::encode($record->jenis_produk_hukum ?: '—') ?></p>
         <p>File: <?= Html::encode($record->nama_file) ?></p>
         <?php if ($record->mime_type === 'application/pdf'): ?>
             <?= Html::a('Lihat', ['lihat', 'id' => $record->id], ['target' => '_blank', 'rel' => 'noopener', 'class' => 'btn btn-outline-primary']) ?>

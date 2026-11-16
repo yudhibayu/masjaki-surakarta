@@ -56,23 +56,23 @@ $menuItems = MenuFront::setMenu('better_front');
 
       <a href="/" class="logo d-flex align-items-center" style="margin-right: 12px">
         <img src="/images/logo-ska.png" alt="">
-        <h1 class="sitename" style="color: var(--bs-primary);">Masjaki Surakarta</h1>
+        <h1 class="sitename" style="color: var(--bs-primary);">MASJAKI<br>Kota Surakarta</h1>
 
       </a>
 
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="/"><?= Yii::t('app', 'Home') ?></a></li>
-          <li><a href="/pbj"><?= Yii::t('rup', 'Construction Work') ?></a></li>
+          <li><a href="/pbj">Pasar Konstruksi</a></li>
           <li><a href="/peraturan-jasa-konstruksi">Peraturan Jasa Konstruksi</a></li>
           <li><a href="/rekap-sertifikasi-tkk">Rekap Sertifikasi TKK</a></li>
           <li><a href="/rekap-pembinaan">Rekap Pembinaan</a></li>
           <li><a href="/rekap-pengawasan-tertib">Rekap Pengawasan</a></li>
-          <li><a href="/cons-market"><?= Yii::t('app', 'Construction Market') ?></a></li>
+          <li class="d-none"><a href="/cons-market"><?= Yii::t('app', 'Construction Market') ?></a></li>
           <li><a href="/berita"><?= Yii::t('app', 'News') ?></a></li>
           <!-- untuk kebutuhan mobile view -->
           <?php if (Yii::$app->user->isGuest) : ?>
-            <li class="hidden"><a href="/new-request/select"><?= Yii::t('user', 'Register') ?></a></li>
+            <li class="hidden d-none"><a href="/new-request/select"><?= Yii::t('user', 'Register') ?></a></li>
             <li class="hidden"><a href="/user/security/login"><?= Yii::t('user', 'Sign In') ?></a></li>
           <?php endif; ?>
           <?php if (!Yii::$app->user->isGuest) : ?>
@@ -85,7 +85,7 @@ $menuItems = MenuFront::setMenu('better_front');
       </nav>
       <?php if (Yii::$app->user->isGuest) : ?>
         <div class="header-buttons">
-          <a class="btn btn-outline-danger me-3" href="/new-request/select"><?= Yii::t('user', 'Register') ?></a>
+          <a class="btn btn-outline-danger me-3 d-none" href="/new-request/select"><?= Yii::t('user', 'Register') ?></a>
           <a class="btn btn-danger" href="/user/security/login"><?= Yii::t('user', 'Sign In') ?></a>
         </div>
         <!-- <php else : ?>

@@ -84,6 +84,7 @@ class StandarHargaController extends Controller
         $isNew = $record->isNewRecord;
         $form = new ProdukHukumForm();
         $form->master_produk_hukum_id = $record->master_produk_hukum_id;
+        $form->jenis_produk_hukum = $record->jenis_produk_hukum;
         $form->tahun = $record->tahun;
         $form->is_public = $isNew ? 0 : $record->is_public;
         if (Yii::$app->request->isPost && $form->load(Yii::$app->request->post())) {

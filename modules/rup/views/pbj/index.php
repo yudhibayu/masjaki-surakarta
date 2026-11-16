@@ -11,7 +11,7 @@ use kartik\bs5dropdown\ButtonDropdown;
 /* @var $searchModel app\modules\rup\models\PbjSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('rup', 'Construction Work');
+$this->title = Yii::t('app', 'Construction Market');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?= $this->registerJs(
@@ -67,7 +67,7 @@ EOT_JS_CODE
 <section class="card">
     <div class="card-header">
         <h3><i class="menu-icon tf-icons bx bx-building"></i> <?= Html::encode($this->title) ?> - List Data</h3>
-        <p>Manajemen Pekerjaan Konstruksi</p>
+        <p>Manajemen Pasar Konstruksi</p>
     </div>
     <div class="card-body">
         <div class="pbj-index">

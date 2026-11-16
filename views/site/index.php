@@ -29,9 +29,6 @@ $this->title = Yii::$app->name . ' - Beranda';
           <!-- <h5 class="mt-3">Pengunjung Keseluruhan : <= $visitor ?></h5>
           <h5 class="mt-3">Pengunjung Bulan Ini : <= $hitsPerMonth ?></h5> -->
         </div>
-        <div class="col-lg-5 order-1 order-lg-2 hero-img" data-aos="zoom-out">
-          <img src="/images/konstruksi.png" class="img-fluid animated" alt="">
-        </div>
       </div>
       <!-- <h5 class="mt-3 text-end">Pengunjung Hari Ini : <?= $hitsPerDay ?> orang</h5> -->
     </div>

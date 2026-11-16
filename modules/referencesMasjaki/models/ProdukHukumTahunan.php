@@ -35,6 +35,8 @@ class ProdukHukumTahunan extends ActiveRecord
             [['master_produk_hukum_id', 'file_size', 'created_by', 'updated_by', 'legacy_dokumen_id'], 'integer'],
             [['tahun'], 'integer', 'min' => 2000, 'max' => 2100],
             [['is_public'], 'boolean'],
+            [['jenis_produk_hukum'], 'string', 'max' => 64],
+            [['jenis_produk_hukum'], 'in', 'range' => array_keys(ProdukHukumForm::JENIS_PRODUK_HUKUM), 'skipOnEmpty' => true],
             [['nama_file', 'file_path'], 'string', 'max' => 255],
             [['mime_type'], 'string', 'max' => 127],
             [['master_produk_hukum_id'], 'exist', 'targetClass' => MasterProdukHukum::class, 'targetAttribute' => ['master_produk_hukum_id' => 'id']],

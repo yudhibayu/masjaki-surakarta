@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card-body">
         <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
             <?= $form->field($formModel, 'master_produk_hukum_id')->dropDownList($masters, ['prompt' => 'Pilih produk hukum']) ?>
+            <?= $form->field($formModel, 'jenis_produk_hukum')->dropDownList(\app\modules\referencesMasjaki\models\ProdukHukumForm::JENIS_PRODUK_HUKUM, ['prompt' => 'Pilih jenis produk hukum']) ?>
             <?= $form->field($formModel, 'tahun')->input('number', ['min' => 2000, 'max' => 2100]) ?>
             <p>Format: PDF, XLS, atau XLSX. <strong>Maksimum 2 MB per file.</strong>
                 Unggah ulang kombinasi yang sama untuk mengganti file tanpa mengubah status publikasi.</p>
