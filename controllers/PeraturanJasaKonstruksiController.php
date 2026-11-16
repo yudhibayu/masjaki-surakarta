@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\StandarHargaStorage;
 use app\components\Theming;
+use app\modules\referencesMasjaki\models\ProdukHukumForm;
 use app\modules\referencesMasjaki\models\ProdukHukumTahunan;
 use Yii;
 use yii\web\Controller;
@@ -16,17 +17,35 @@ class PeraturanJasaKonstruksiController extends Controller
         return parent::beforeAction($action);
     }
 
-    public function actionIndex($tahun = null)
+    public function actionIndex($tahun = null, $jenis_produk_hukum = null)
     {
+        $jenisProdukHukumOptions = ProdukHukumForm::JENIS_PRODUK_HUKUM;
+        $selectedJenisProdukHukum = is_string($jenis_produk_hukum)
+            && isset($jenisProdukHukumOptions[$jenis_produk_hukum])
+            ? $jenis_produk_hukum
+            : null;
         $years = ProdukHukumTahunan::find()->select('tahun')
             ->where(['is_public' => 1, 'deleted_at' => null])
             ->distinct()->orderBy(['tahun' => SORT_DESC])->column();
         $selectedYear = $tahun !== null && preg_match('/^\d{4}$/', (string) $tahun) ? (int) $tahun : (isset($years[0]) ? (int) $years[0] : null);
-        $documents = $selectedYear === null ? [] : ProdukHukumTahunan::find()
-            ->alias('d')->joinWith('master m')
-            ->where(['d.tahun' => $selectedYear, 'd.is_public' => 1, 'd.deleted_at' => null])
-            ->orderBy(['m.nama' => SORT_ASC, 'd.id' => SORT_ASC])->all();
-        return $this->render('index', ['years' => $years, 'selectedYear' => $selectedYear, 'documents' => $documents]);
+        $documents = [];
+        if ($selectedYear !== null) {
+            $query = ProdukHukumTahunan::find()
+                ->alias('d')->joinWith('master m')
+                ->where(['d.tahun' => $selectedYear, 'd.is_public' => 1, 'd.deleted_at' => null])
+                ->orderBy(['m.nama' => SORT_ASC, 'd.id' => SORT_ASC]);
+            if ($selectedJenisProdukHukum !== null) {
+                $query->andWhere(['d.jenis_produk_hukum' => $selectedJenisProdukHukum]);
+            }
+            $documents = $query->all();
+        }
+        return $this->render('index', [
+            'years' => $years,
+            'selectedYear' => $selectedYear,
+            'jenisProdukHukumOptions' => $jenisProdukHukumOptions,
+            'selectedJenisProdukHukum' => $selectedJenisProdukHukum,
+            'documents' => $documents,
+        ]);
     }
 
     public function actionLihat($id)

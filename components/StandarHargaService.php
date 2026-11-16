@@ -82,6 +82,7 @@ class StandarHargaService
             }
             $isNew = $record->isNewRecord;
             $record->master_produk_hukum_id = $master->id;
+            $record->jenis_produk_hukum = $form->jenis_produk_hukum;
             $record->tahun = (int) $form->tahun;
             $record->deleted_at = null;
             if ($isNew || $allowPublicationChange) {
