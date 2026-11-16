@@ -342,7 +342,7 @@ $user = Yii::$app->user->identity;
                                     <span class="menu-title"><?= Yii::t('rup', 'Construction Plan') ?></span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item d-none">
                                 <a class="nav-link" href="/construction/construction-market">
                                     <i class="menu-icon bx bx-store"></i>
                                     <span class="menu-title"><?= Yii::t('app', 'Construction Market') ?></span>
@@ -351,7 +351,7 @@ $user = Yii::$app->user->identity;
                             <li class="nav-item">
                                 <a class="nav-link" href="/rup/pbj">
                                     <i class="menu-icon bx bx-building"></i>
-                                    <span class="menu-title"><?= Yii::t('rup', 'Construction Work') ?></span>
+                                    <span class="menu-title"><?= Yii::t('app', 'Construction Market') ?></span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -404,7 +404,7 @@ $user = Yii::$app->user->identity;
                             <li class="nav-item">
                                 <a class="nav-link" href="/rup/pbj">
                                     <i class="menu-icon bx bx-building"></i>
-                                    <span class="menu-title"><?= Yii::t('rup', 'Construction Work') ?></span>
+                                    <span class="menu-title"><?= Yii::t('app', 'Construction Market') ?></span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -428,7 +428,7 @@ $user = Yii::$app->user->identity;
                                     <span class="menu-title"><?= Yii::t('app', 'Construction Vacancies') ?></span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item d-none">
                                 <a class="nav-link" href="/construction/construction-market">
                                     <i class="menu-icon bx bx-store"></i>
                                     <span class="menu-title"><?= Yii::t('app', 'Construction Market') ?></span>
@@ -437,7 +437,7 @@ $user = Yii::$app->user->identity;
                             <li class="nav-item">
                                 <a class="nav-link" href="/rup/pbj">
                                     <i class="menu-icon bx bx-building"></i>
-                                    <span class="menu-title"><?= Yii::t('rup', 'Construction Work') ?></span>
+                                    <span class="menu-title"><?= Yii::t('app', 'Construction Market') ?></span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -470,7 +470,7 @@ $user = Yii::$app->user->identity;
                             <li class="nav-item">
                                 <a class="nav-link" href="/rup/pbj">
                                     <i class="menu-icon bx bx-building"></i>
-                                    <span class="menu-title"><?= Yii::t('rup', 'Construction Work') ?></span>
+                                    <span class="menu-title"><?= Yii::t('app', 'Construction Market') ?></span>
                                 </a>
                             </li>
                             <li class="nav-item">
