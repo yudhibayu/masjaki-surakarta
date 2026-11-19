@@ -53,8 +53,9 @@ class RupSearch extends Rup
         if ($marketMode) {
             $subQuery = (new Query())
                 ->select('rup_code')
-                ->from('pbj');
-            $query->andWhere(['not in', 'idrup', $subQuery->createCommand()->queryColumn()]);
+                ->from('pbj')
+                ->where('pbj.rup_code = rup.idrup');
+            $query->andWhere(['not exists', $subQuery]);
         }
 
         $dataProvider = new ActiveDataProvider([

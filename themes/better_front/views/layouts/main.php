@@ -63,12 +63,12 @@ $menuItems = MenuFront::setMenu('better_front');
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="/"><?= Yii::t('app', 'Home') ?></a></li>
-          <li><a href="/pbj">Pasar Konstruksi</a></li>
+          <li><a href="/pbj">Pekerjaan Konstruksi</a></li>
           <li><a href="/peraturan-jasa-konstruksi">Peraturan Jasa Konstruksi</a></li>
           <li><a href="/rekap-sertifikasi-tkk">Rekap Sertifikasi TKK</a></li>
           <li><a href="/rekap-pembinaan">Rekap Pembinaan</a></li>
           <li><a href="/rekap-pengawasan-tertib">Rekap Pengawasan</a></li>
-          <li class="d-none"><a href="/cons-market"><?= Yii::t('app', 'Construction Market') ?></a></li>
+          <li><a href="/cons-market"><?= Yii::t('app', 'Construction Market') ?></a></li>
           <li><a href="/berita"><?= Yii::t('app', 'News') ?></a></li>
           <!-- untuk kebutuhan mobile view -->
           <?php if (Yii::$app->user->isGuest) : ?>
