@@ -27,7 +27,7 @@
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
 :root {
-  --background-color: #F3F6F3;
+  --background-color: #ffffff;
   /* Background color for the entire website, including individual sections */
   --default-color: #30343A;
   /* Default color used for the majority of the text content across the entire website */
@@ -62,7 +62,7 @@
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
 
 .light-background {
-  --background-color: #F3F6F3;
+  --background-color: #ffffff;
   --surface-color: #ffffff;
 }
 
@@ -256,7 +256,7 @@ h6 {
 --------------------------------------------------------------*/
 .header {
   color: var(--default-color);
-  background-color: #E7F2E8;
+  background-color: #ffffff;
   padding: 20px 0;
   transition: all 0.5s;
   z-index: 997;
@@ -640,7 +640,7 @@ h6 {
 --------------------------------------------------------------*/
 .footer {
   --heading-font: var(--default-font);
-  --background-color: #E7F2E8;
+  --background-color: #ffffff;
   --default-color: #30343A;
   --heading-color: #263A32;
   color: var(--default-color);
